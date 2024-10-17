@@ -18,7 +18,8 @@ func Unpack(input string) (string, error) {
 	var i int
 
 	for i < len(runes) {
-		if unicode.IsLetter(runes[i]) {
+		switch true {
+		case unicode.IsLetter(runes[i]):
 			if escape {
 				return "", ErrInvalidString
 			}
@@ -28,8 +29,8 @@ func Unpack(input string) (string, error) {
 				result.WriteRune(prevRune)
 				prevRune = runes[i]
 			}
-			i++
-		} else if unicode.IsDigit(runes[i]) {
+			break
+		case unicode.IsDigit(runes[i]):
 			if prevRune == 0 && !escape {
 				return "", ErrInvalidString
 			}
@@ -43,8 +44,8 @@ func Unpack(input string) (string, error) {
 				result.WriteString(repeatedStr)
 				prevRune = 0
 			}
-			i++
-		} else if runes[i] == '\\' {
+			break
+		case runes[i] == '\\':
 			if escape {
 				escape = false
 				result.WriteRune(prevRune)
@@ -52,11 +53,14 @@ func Unpack(input string) (string, error) {
 			} else {
 				escape = true
 			}
-			i++
-		} else {
+			break
+		default:
 			return "", ErrInvalidString
 		}
+
+		i++
 	}
+
 	if prevRune != 0 {
 		result.WriteRune(prevRune)
 	}
