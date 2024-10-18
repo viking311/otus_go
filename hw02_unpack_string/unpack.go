@@ -15,35 +15,34 @@ func Unpack(input string) (string, error) {
 	var result strings.Builder
 	var prevRune rune
 	var escape bool
-	var i int
 
-	for i < len(runes) {
+	for _, curRune := range runes {
 		switch {
-		case unicode.IsLetter(runes[i]):
+		case unicode.IsLetter(curRune):
 			if escape {
 				return "", ErrInvalidString
 			}
 			if prevRune == 0 {
-				prevRune = runes[i]
+				prevRune = curRune
 			} else {
 				result.WriteRune(prevRune)
-				prevRune = runes[i]
+				prevRune = curRune
 			}
-		case unicode.IsDigit(runes[i]):
+		case unicode.IsDigit(curRune):
 			if prevRune == 0 && !escape {
 				return "", ErrInvalidString
 			}
 			if escape {
 				result.WriteRune(prevRune)
-				prevRune = runes[i]
+				prevRune = curRune
 				escape = false
 			} else {
-				repCount, _ := strconv.Atoi(string(runes[i]))
+				repCount, _ := strconv.Atoi(string(curRune))
 				repeatedStr := strings.Repeat(string(prevRune), repCount)
 				result.WriteString(repeatedStr)
 				prevRune = 0
 			}
-		case runes[i] == '\\':
+		case curRune == '\\':
 			if escape {
 				escape = false
 				result.WriteRune(prevRune)
@@ -54,8 +53,6 @@ func Unpack(input string) (string, error) {
 		default:
 			return "", ErrInvalidString
 		}
-
-		i++
 	}
 
 	if prevRune != 0 {
