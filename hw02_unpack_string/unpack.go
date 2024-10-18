@@ -10,13 +10,11 @@ import (
 var ErrInvalidString = errors.New("invalid string")
 
 func Unpack(input string) (string, error) {
-	runes := []rune(input)
-
 	var result strings.Builder
 	var prevRune rune
 	var escape bool
-
-	for _, curRune := range runes {
+	result.Reset()
+	for _, curRune := range input {
 		switch {
 		case unicode.IsLetter(curRune):
 			if escape {
@@ -25,7 +23,7 @@ func Unpack(input string) (string, error) {
 			if prevRune == 0 {
 				prevRune = curRune
 			} else {
-				result.WriteRune(prevRune)
+				writeRune(prevRune, 1, &result)
 				prevRune = curRune
 			}
 		case unicode.IsDigit(curRune):
@@ -33,19 +31,20 @@ func Unpack(input string) (string, error) {
 				return "", ErrInvalidString
 			}
 			if escape {
-				result.WriteRune(prevRune)
+				if prevRune != 0 {
+					writeRune(prevRune, 1, &result)
+				}
 				prevRune = curRune
 				escape = false
 			} else {
 				repCount, _ := strconv.Atoi(string(curRune))
-				repeatedStr := strings.Repeat(string(prevRune), repCount)
-				result.WriteString(repeatedStr)
+				writeRune(prevRune, repCount, &result)
 				prevRune = 0
 			}
 		case curRune == '\\':
 			if escape {
 				escape = false
-				result.WriteRune(prevRune)
+				writeRune(prevRune, 1, &result)
 				prevRune = '\\'
 			} else {
 				escape = true
@@ -55,9 +54,20 @@ func Unpack(input string) (string, error) {
 		}
 	}
 
-	if prevRune != 0 {
-		result.WriteRune(prevRune)
-	}
+	writeRune(prevRune, 1, &result)
 
 	return result.String(), nil
+}
+
+func writeRune(r rune, count int, result *strings.Builder) {
+	if r == 0 || count == 0 {
+		return
+	}
+
+	str := string(r)
+	if count > 1 {
+		str = strings.Repeat(str, count)
+	}
+
+	result.WriteString(str)
 }
