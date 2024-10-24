@@ -11,7 +11,7 @@ linters-settings:
         files:
           - $test
         allow:
-          - pkg: github.com/stretchr/testify
+          - "github.com/stretchr/testify"
   funlen:
     lines: 150
     statements: 80
