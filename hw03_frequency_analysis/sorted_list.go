@@ -3,7 +3,6 @@ package hw03frequencyanalysis
 import "sort"
 
 func getSortedSlice(frequency map[string]int) []string {
-
 	pl := make(PairList, len(frequency))
 	i := 0
 	for k, v := range frequency {
