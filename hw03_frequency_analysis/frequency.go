@@ -14,7 +14,7 @@ func frequencyCalc(text string) map[string]int {
 			word = ""
 			continue
 		}
-		word = word + string(r)
+		word += string(r)
 	}
 
 	if len(word) > 0 {
