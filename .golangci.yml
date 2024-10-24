@@ -7,11 +7,12 @@ run:
 linters-settings:
   depguard:
     rules:
-      requre_pkg:
+      require_pkg:
         files:
           - $test
         allow:
-          - "github.com/stretchr/testify"
+          - $gostd
+          - "github.com/stretchr/testify/require"
   funlen:
     lines: 150
     statements: 80
