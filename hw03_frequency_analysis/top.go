@@ -1,5 +1,7 @@
 package hw03frequencyanalysis
 
+import "math"
+
 func Top10(s string) []string {
 	if len(s) == 0 {
 		return nil
@@ -9,5 +11,6 @@ func Top10(s string) []string {
 
 	wordSlice := getSortedSlice(frequencyStat)
 
-	return wordSlice[:10]
+	l := math.Min(10, float64(len(wordSlice)))
+	return wordSlice[:int(l)]
 }

@@ -3,21 +3,10 @@ package hw03frequencyanalysis
 import "strings"
 
 func frequencyCalc(text string) map[string]int {
-	frequency := make(map[string]int)
-	word := ""
-	for _, r := range text {
-		if r == ' ' || r == '\t' || r == '\n' {
-			normWord := normalizeWord(word)
-			if len(normWord) > 0 {
-				frequency[normWord]++
-			}
-			word = ""
-			continue
-		}
-		word += string(r)
-	}
+	rawWords := strings.Fields(text)
 
-	if len(word) > 0 {
+	frequency := make(map[string]int)
+	for _, word := range rawWords {
 		normWord := normalizeWord(word)
 		if len(normWord) > 0 {
 			frequency[normWord]++
