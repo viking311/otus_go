@@ -50,4 +50,15 @@ func TestList(t *testing.T) {
 		}
 		require.Equal(t, []int{60, 70, 80, 40, 10, 30, 50}, elems)
 	})
+
+	t.Run("PushBack first", func(t *testing.T) {
+		l := NewList()
+		l.PushBack(10)
+
+		front := l.Front()
+		back := l.Back()
+
+		require.NotNil(t, front)
+		require.Equal(t, front, back)
+	})
 }
