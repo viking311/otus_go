@@ -15,7 +15,7 @@ type lruCache struct {
 	queue       List
 	items       map[Key]*ListItem
 	reverseDict map[*ListItem]Key
-	mx          sync.RWMutex
+	mx          sync.Mutex
 }
 
 func (lc *lruCache) Set(key Key, value interface{}) bool {
@@ -28,23 +28,23 @@ func (lc *lruCache) Set(key Key, value interface{}) bool {
 		item.Value = value
 		lc.queue.MoveToFront(item)
 	} else {
-		lc.items[key] = lc.queue.PushFront(value)
-		lc.reverseDict[lc.items[key]] = key
-		if lc.queue.Len() > lc.capacity {
+		if lc.queue.Len() == lc.capacity {
 			back := lc.queue.Back()
 			lc.queue.Remove(back)
 			backKey := lc.reverseDict[back]
 			delete(lc.items, backKey)
 			delete(lc.reverseDict, back)
 		}
+		lc.items[key] = lc.queue.PushFront(value)
+		lc.reverseDict[lc.items[key]] = key
 	}
 
 	return ok
 }
 
 func (lc *lruCache) Get(key Key) (interface{}, bool) {
-	lc.mx.RLock()
-	defer lc.mx.RUnlock()
+	lc.mx.Lock()
+	defer lc.mx.Unlock()
 
 	if item, ok := lc.items[key]; ok {
 		lc.queue.MoveToFront(item)
@@ -71,6 +71,6 @@ func NewCache(capacity int) Cache {
 		queue:       NewList(),
 		items:       make(map[Key]*ListItem, capacity),
 		reverseDict: make(map[*ListItem]Key, capacity),
-		mx:          sync.RWMutex{},
+		mx:          sync.Mutex{},
 	}
 }
