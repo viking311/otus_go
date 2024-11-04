@@ -10,12 +10,16 @@ type Cache interface {
 	Clear()
 }
 
+type cacheItem struct {
+	key   Key
+	value interface{}
+}
+
 type lruCache struct {
-	capacity    int
-	queue       List
-	items       map[Key]*ListItem
-	reverseDict map[*ListItem]Key
-	mx          sync.Mutex
+	capacity int
+	queue    List
+	items    map[Key]*ListItem
+	mx       sync.Mutex
 }
 
 func (lc *lruCache) Set(key Key, value interface{}) bool {
@@ -25,19 +29,26 @@ func (lc *lruCache) Set(key Key, value interface{}) bool {
 	item, ok := lc.items[key]
 
 	if ok {
-		item.Value = value
+		ci := item.Value.(cacheItem)
+		ci.value = value
+		item.Value = ci
 		lc.queue.MoveToFront(item)
-	} else {
-		if lc.queue.Len() == lc.capacity {
-			back := lc.queue.Back()
-			lc.queue.Remove(back)
-			backKey := lc.reverseDict[back]
-			delete(lc.items, backKey)
-			delete(lc.reverseDict, back)
-		}
-		lc.items[key] = lc.queue.PushFront(value)
-		lc.reverseDict[lc.items[key]] = key
+		return ok
 	}
+
+	if lc.queue.Len() == lc.capacity {
+		back := lc.queue.Back()
+		lc.queue.Remove(back)
+		ci := back.Value.(cacheItem)
+		backKey := ci.key
+		delete(lc.items, backKey)
+	}
+
+	ci := cacheItem{
+		key:   key,
+		value: value,
+	}
+	lc.items[key] = lc.queue.PushFront(ci)
 
 	return ok
 }
@@ -48,7 +59,8 @@ func (lc *lruCache) Get(key Key) (interface{}, bool) {
 
 	if item, ok := lc.items[key]; ok {
 		lc.queue.MoveToFront(item)
-		return item.Value, true
+		ci := item.Value.(cacheItem)
+		return ci.value, true
 	}
 
 	return nil, false
@@ -58,19 +70,15 @@ func (lc *lruCache) Clear() {
 	lc.mx.Lock()
 	defer lc.mx.Unlock()
 
-	lc.reverseDict = make(map[*ListItem]Key, lc.capacity)
 	lc.items = make(map[Key]*ListItem, lc.capacity)
-	for lc.queue.Len() > 0 {
-		lc.queue.Remove(lc.queue.Back())
-	}
+	lc.queue = NewList()
 }
 
 func NewCache(capacity int) Cache {
 	return &lruCache{
-		capacity:    capacity,
-		queue:       NewList(),
-		items:       make(map[Key]*ListItem, capacity),
-		reverseDict: make(map[*ListItem]Key, capacity),
-		mx:          sync.Mutex{},
+		capacity: capacity,
+		queue:    NewList(),
+		items:    make(map[Key]*ListItem, capacity),
+		mx:       sync.Mutex{},
 	}
 }
