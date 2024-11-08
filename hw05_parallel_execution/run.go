@@ -13,7 +13,8 @@ var errCount int
 
 // Run starts tasks in n goroutines and stops its work when receiving m errors from tasks.
 func Run(tasks []Task, n, m int) error {
-	if n == 0 {
+
+	if len(tasks) == 0 || n == 0 {
 		return nil
 	}
 
