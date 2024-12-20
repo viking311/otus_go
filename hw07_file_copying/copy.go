@@ -134,7 +134,6 @@ func fileCreate(filePath string) (*os.File, error) {
 	}
 
 	file, err := os.Create(filePath)
-
 	if err != nil {
 		return nil, err
 	}
