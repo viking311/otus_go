@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"log"
 	"os"
+	"path"
 	"strings"
 )
 
@@ -46,7 +47,8 @@ func ReadDir(dir string) (Environment, error) {
 			env[fileInfo.Name()] = EnvValue{NeedRemove: true}
 		}
 
-		value, err := readFile(dir + "/" + fileInfo.Name())
+		fullPath := path.Join(dir, fileInfo.Name())
+		value, err := readFile(fullPath)
 		if err != nil {
 			return nil, err
 		}
