@@ -1,0 +1,15 @@
+goos: linux
+goarch: amd64
+pkg: github.com/viking311/otus_go/hw10_program_optimization
+cpu: AMD Ryzen 3 5425U with Radeon Graphics         
+                │   old.txt   │               new.txt               │
+                │   sec/op    │   sec/op     vs base                │
+GetDomainStat-8   548.4m ± 1%   123.0m ± 2%  -77.56% (p=0.000 n=50)
+
+                │    old.txt    │               new.txt                │
+                │     B/op      │     B/op      vs base                │
+GetDomainStat-8   308.33Mi ± 0%   17.89Mi ± 0%  -94.20% (p=0.000 n=50)
+
+                │   old.txt    │           new.txt           │
+                │  allocs/op   │  allocs/op   vs base        │
+GetDomainStat-8   3045.4k ± 0%   123.2k ± 0%  -95.95% (n=50)
