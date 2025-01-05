@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"io"
 	"net"
@@ -40,28 +39,15 @@ func (tl *Telnet) Close() error {
 }
 
 func (tl *Telnet) Send() error {
-	scanner := bufio.NewScanner(tl.in)
+	_, err := io.Copy(tl.conn, tl.in)
 
-	for scanner.Scan() {
-		text := scanner.Text() + "\n"
-		_, err := tl.conn.Write([]byte(text))
-		if err != nil {
-			return err
-		}
-	}
-
-	return scanner.Err()
+	return err
 }
 
 func (tl *Telnet) Receive() error {
-	scanner := bufio.NewScanner(tl.conn)
-	for scanner.Scan() {
-		_, err := fmt.Fprintln(tl.out, scanner.Text())
-		if err != nil {
-			return err
-		}
-	}
-	return scanner.Err()
+	_, err := io.Copy(tl.out, tl.conn)
+
+	return err
 }
 
 func NewTelnetClient(address string, timeout time.Duration, in io.ReadCloser, out io.Writer) TelnetClient {
