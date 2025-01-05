@@ -27,15 +27,19 @@ func main() {
 
 	go func() {
 		defer cancel()
-		if err := client.Send(); err != nil {
-			log.Fatal(err)
+
+		errS := client.Send()
+		if errS != nil {
+			log.Fatal(errS)
 		}
 	}()
 
 	go func() {
 		defer cancel()
-		if err := client.Receive(); err != nil {
-			log.Fatal(err)
+
+		errR := client.Receive()
+		if errR != nil {
+			log.Fatal(errR)
 		}
 	}()
 
