@@ -12,25 +12,25 @@ func validateString(value string, rules validationRules) error {
 		case "in":
 			valueSet := strings.Split(rule, ",")
 			if !inValidation[string](value, valueSet) {
-				return NotAllowedValueError
+				return ErrNotAllowedValue
 			}
 		case "len":
 			controlValue, err := strconv.Atoi(rule)
 			if err != nil {
-				return IncorrectValidationRule
+				return ErrIncorrectValidationRule
 			}
 
 			if !lenStringValidation(value, controlValue) {
-				return LenStringError
+				return ErrLenString
 			}
 		case "regexp":
 			res, err := regExpStringValidation(value, rule)
 			if err != nil {
-				return IncorrectValidationRule
+				return ErrIncorrectValidationRule
 			}
 
 			if !res {
-				return NotMatchPatternError
+				return ErrNotMatchPattern
 			}
 		}
 	}

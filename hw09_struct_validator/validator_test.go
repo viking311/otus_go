@@ -46,7 +46,7 @@ func TestValidate(t *testing.T) {
 	}{
 		{
 			in:          UserRole("admin"),
-			expectedErr: UnSupportedTypeError,
+			expectedErr: ErrUnsupportedType,
 		},
 		{
 			in: Response{
@@ -63,7 +63,7 @@ func TestValidate(t *testing.T) {
 			expectedErr: ValidationErrors{
 				ValidationError{
 					Field: "Code",
-					Err:   NotAllowedValueError,
+					Err:   ErrNotAllowedValue,
 				},
 			},
 		},
@@ -80,7 +80,7 @@ func TestValidate(t *testing.T) {
 			expectedErr: ValidationErrors{
 				ValidationError{
 					Field: "Version",
-					Err:   LenStringError,
+					Err:   ErrLenString,
 				},
 			},
 		},
@@ -109,7 +109,7 @@ func TestValidate(t *testing.T) {
 			expectedErr: ValidationErrors{
 				ValidationError{
 					Field: "ID",
-					Err:   LenStringError,
+					Err:   ErrLenString,
 				},
 			},
 		},
@@ -126,7 +126,7 @@ func TestValidate(t *testing.T) {
 			expectedErr: ValidationErrors{
 				ValidationError{
 					Field: "Age",
-					Err:   MinError,
+					Err:   ErrMin,
 				},
 			},
 		},
@@ -143,7 +143,7 @@ func TestValidate(t *testing.T) {
 			expectedErr: ValidationErrors{
 				ValidationError{
 					Field: "Age",
-					Err:   MaxError,
+					Err:   ErrMax,
 				},
 			},
 		},
@@ -160,7 +160,7 @@ func TestValidate(t *testing.T) {
 			expectedErr: ValidationErrors{
 				ValidationError{
 					Field: "Email",
-					Err:   NotMatchPatternError,
+					Err:   ErrNotMatchPattern,
 				},
 			},
 		},
@@ -177,7 +177,7 @@ func TestValidate(t *testing.T) {
 			expectedErr: ValidationErrors{
 				ValidationError{
 					Field: "Role",
-					Err:   NotAllowedValueError,
+					Err:   ErrNotAllowedValue,
 				},
 			},
 		},
@@ -195,7 +195,7 @@ func TestValidate(t *testing.T) {
 			expectedErr: ValidationErrors{
 				ValidationError{
 					Field: "Phones",
-					Err:   LenStringError,
+					Err:   ErrLenString,
 				},
 			},
 		},
@@ -213,23 +213,23 @@ func TestValidate(t *testing.T) {
 			expectedErr: ValidationErrors{
 				ValidationError{
 					Field: "ID",
-					Err:   LenStringError,
+					Err:   ErrLenString,
 				},
 				ValidationError{
 					Field: "Age",
-					Err:   MinError,
+					Err:   ErrMin,
 				},
 				ValidationError{
 					Field: "Email",
-					Err:   NotMatchPatternError,
+					Err:   ErrNotMatchPattern,
 				},
 				ValidationError{
 					Field: "Role",
-					Err:   NotAllowedValueError,
+					Err:   ErrNotAllowedValue,
 				},
 				ValidationError{
 					Field: "Phones",
-					Err:   LenStringError,
+					Err:   ErrLenString,
 				},
 			},
 		},

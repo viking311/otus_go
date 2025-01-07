@@ -32,19 +32,19 @@ func (v ValidationErrors) Error() string {
 }
 
 var (
-	UnSupportedTypeError    = errors.New("unsupported type")
-	NotAllowedValueError    = errors.New("value is not in the allowed set")
-	MinError                = errors.New("too small value")
-	MaxError                = errors.New("too big value")
-	LenStringError          = errors.New("incorrect string length")
-	IncorrectValidationRule = errors.New("incorrect validation rule")
-	NotMatchPatternError    = errors.New("value does not match pattern")
+	ErrUnsupportedType         = errors.New("unsupported type")
+	ErrNotAllowedValue         = errors.New("value is not in the allowed set")
+	ErrMin                     = errors.New("too small value")
+	ErrMax                     = errors.New("too big value")
+	ErrLenString               = errors.New("incorrect string length")
+	ErrIncorrectValidationRule = errors.New("incorrect validation rule")
+	ErrNotMatchPattern         = errors.New("value does not match pattern")
 )
 
 func Validate(v interface{}) error {
 	value := reflect.ValueOf(v)
 	if value.Kind() != reflect.Struct {
-		return UnSupportedTypeError
+		return ErrUnsupportedType
 	}
 
 	validationErrors := make(ValidationErrors, 0)

@@ -14,32 +14,32 @@ func validateInt(value int64, rules validationRules) error {
 			for _, rawItem := range rawValueSet {
 				castValue, err := strconv.Atoi(rawItem)
 				if err != nil {
-					return IncorrectValidationRule
+					return ErrIncorrectValidationRule
 				}
 
 				valueSet = append(valueSet, int64(castValue))
 			}
 
 			if !inValidation[int64](value, valueSet) {
-				return NotAllowedValueError
+				return ErrNotAllowedValue
 			}
 		case "min":
 			controlValue, err := strconv.Atoi(rule)
 			if err != nil {
-				return IncorrectValidationRule
+				return ErrIncorrectValidationRule
 			}
 
 			if !intMinValidation(value, int64(controlValue)) {
-				return MinError
+				return ErrMin
 			}
 		case "max":
 			controlValue, err := strconv.Atoi(rule)
 			if err != nil {
-				return IncorrectValidationRule
+				return ErrIncorrectValidationRule
 			}
 
 			if !intMaxValidation(value, int64(controlValue)) {
-				return MaxError
+				return ErrMax
 			}
 		}
 	}
