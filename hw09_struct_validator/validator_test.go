@@ -3,7 +3,10 @@ package hw09structvalidator
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 type UserRole string
@@ -42,18 +45,210 @@ func TestValidate(t *testing.T) {
 		expectedErr error
 	}{
 		{
-			// Place your code here.
+			in:          UserRole("admin"),
+			expectedErr: UnSupportedTypeError,
 		},
-		// ...
-		// Place your code here.
+		{
+			in: Response{
+				Code: 200,
+				Body: "body",
+			},
+			expectedErr: nil,
+		},
+		{
+			in: Response{
+				Code: 201,
+				Body: "body",
+			},
+			expectedErr: ValidationErrors{
+				ValidationError{
+					Field: "Code",
+					Err:   NotAllowedValueError,
+				},
+			},
+		},
+		{
+			in: App{
+				Version: "12345",
+			},
+			expectedErr: nil,
+		},
+		{
+			in: App{
+				Version: "1234",
+			},
+			expectedErr: ValidationErrors{
+				ValidationError{
+					Field: "Version",
+					Err:   LenStringError,
+				},
+			},
+		},
+		{
+			in: User{
+				ID:    strings.Repeat("*", 36),
+				Age:   19,
+				Email: "120@ya.ru",
+				Role:  "admin",
+				Phones: []string{
+					"+7812345678",
+				},
+			},
+			expectedErr: nil,
+		},
+		{
+			in: User{
+				ID:    strings.Repeat("*", 3),
+				Age:   19,
+				Email: "120@ya.ru",
+				Role:  "admin",
+				Phones: []string{
+					"+7812345678",
+				},
+			},
+			expectedErr: ValidationErrors{
+				ValidationError{
+					Field: "ID",
+					Err:   LenStringError,
+				},
+			},
+		},
+		{
+			in: User{
+				ID:    strings.Repeat("*", 36),
+				Age:   15,
+				Email: "120@ya.ru",
+				Role:  "admin",
+				Phones: []string{
+					"+7812345678",
+				},
+			},
+			expectedErr: ValidationErrors{
+				ValidationError{
+					Field: "Age",
+					Err:   MinError,
+				},
+			},
+		},
+		{
+			in: User{
+				ID:    strings.Repeat("*", 36),
+				Age:   150,
+				Email: "120@ya.ru",
+				Role:  "admin",
+				Phones: []string{
+					"+7812345678",
+				},
+			},
+			expectedErr: ValidationErrors{
+				ValidationError{
+					Field: "Age",
+					Err:   MaxError,
+				},
+			},
+		},
+		{
+			in: User{
+				ID:    strings.Repeat("*", 36),
+				Age:   25,
+				Email: "120@ya",
+				Role:  "admin",
+				Phones: []string{
+					"+7812345678",
+				},
+			},
+			expectedErr: ValidationErrors{
+				ValidationError{
+					Field: "Email",
+					Err:   NotMatchPatternError,
+				},
+			},
+		},
+		{
+			in: User{
+				ID:    strings.Repeat("*", 36),
+				Age:   25,
+				Email: "120@ya.ru",
+				Role:  "user",
+				Phones: []string{
+					"+7812345678",
+				},
+			},
+			expectedErr: ValidationErrors{
+				ValidationError{
+					Field: "Role",
+					Err:   NotAllowedValueError,
+				},
+			},
+		},
+		{
+			in: User{
+				ID:    strings.Repeat("*", 36),
+				Age:   25,
+				Email: "120@ya.ru",
+				Role:  "admin",
+				Phones: []string{
+					"+7812345678",
+					"+7812345",
+				},
+			},
+			expectedErr: ValidationErrors{
+				ValidationError{
+					Field: "Phones",
+					Err:   LenStringError,
+				},
+			},
+		},
+		{
+			in: User{
+				ID:    strings.Repeat("*", 3),
+				Age:   15,
+				Email: "120@ya",
+				Role:  "user",
+				Phones: []string{
+					"+7812345678",
+					"+7812345",
+				},
+			},
+			expectedErr: ValidationErrors{
+				ValidationError{
+					Field: "ID",
+					Err:   LenStringError,
+				},
+				ValidationError{
+					Field: "Age",
+					Err:   MinError,
+				},
+				ValidationError{
+					Field: "Email",
+					Err:   NotMatchPatternError,
+				},
+				ValidationError{
+					Field: "Role",
+					Err:   NotAllowedValueError,
+				},
+				ValidationError{
+					Field: "Phones",
+					Err:   LenStringError,
+				},
+			},
+		},
+		{
+			in: Token{
+				Header:    []byte("hello"),
+				Payload:   []byte("world"),
+				Signature: []byte("!!!!"),
+			},
+			expectedErr: nil,
+		},
 	}
 
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("case %d", i), func(t *testing.T) {
 			tt := tt
 			t.Parallel()
-
-			// Place your code here.
+			err := Validate(tt.in)
+			require.Equal(t, tt.expectedErr, err)
 			_ = tt
 		})
 	}
