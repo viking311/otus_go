@@ -85,6 +85,32 @@ func TestValidate(t *testing.T) {
 			},
 		},
 		{
+			in: Token{
+				Header:    []byte("hello"),
+				Payload:   []byte("world"),
+				Signature: []byte("!!!!"),
+			},
+			expectedErr: nil,
+		},
+	}
+
+	for i, tt := range tests {
+		t.Run(fmt.Sprintf("case %d", i), func(t *testing.T) {
+			tt := tt
+			t.Parallel()
+			err := Validate(tt.in)
+			require.Equal(t, tt.expectedErr, err)
+			_ = tt
+		})
+	}
+}
+
+func TestUserValidate(t *testing.T) {
+	tests := []struct {
+		in          interface{}
+		expectedErr error
+	}{
+		{
 			in: User{
 				ID:    strings.Repeat("*", 36),
 				Age:   19,
@@ -233,14 +259,6 @@ func TestValidate(t *testing.T) {
 				},
 			},
 		},
-		{
-			in: Token{
-				Header:    []byte("hello"),
-				Payload:   []byte("world"),
-				Signature: []byte("!!!!"),
-			},
-			expectedErr: nil,
-		},
 	}
 
 	for i, tt := range tests {
@@ -252,4 +270,5 @@ func TestValidate(t *testing.T) {
 			_ = tt
 		})
 	}
+
 }
