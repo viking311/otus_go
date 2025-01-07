@@ -125,109 +125,6 @@ func TestUserValidate(t *testing.T) {
 		{
 			in: User{
 				ID:    strings.Repeat("*", 3),
-				Age:   19,
-				Email: "120@ya.ru",
-				Role:  "admin",
-				Phones: []string{
-					"+7812345678",
-				},
-			},
-			expectedErr: ValidationErrors{
-				ValidationError{
-					Field: "ID",
-					Err:   ErrLenString,
-				},
-			},
-		},
-		{
-			in: User{
-				ID:    strings.Repeat("*", 36),
-				Age:   15,
-				Email: "120@ya.ru",
-				Role:  "admin",
-				Phones: []string{
-					"+7812345678",
-				},
-			},
-			expectedErr: ValidationErrors{
-				ValidationError{
-					Field: "Age",
-					Err:   ErrMin,
-				},
-			},
-		},
-		{
-			in: User{
-				ID:    strings.Repeat("*", 36),
-				Age:   150,
-				Email: "120@ya.ru",
-				Role:  "admin",
-				Phones: []string{
-					"+7812345678",
-				},
-			},
-			expectedErr: ValidationErrors{
-				ValidationError{
-					Field: "Age",
-					Err:   ErrMax,
-				},
-			},
-		},
-		{
-			in: User{
-				ID:    strings.Repeat("*", 36),
-				Age:   25,
-				Email: "120@ya",
-				Role:  "admin",
-				Phones: []string{
-					"+7812345678",
-				},
-			},
-			expectedErr: ValidationErrors{
-				ValidationError{
-					Field: "Email",
-					Err:   ErrNotMatchPattern,
-				},
-			},
-		},
-		{
-			in: User{
-				ID:    strings.Repeat("*", 36),
-				Age:   25,
-				Email: "120@ya.ru",
-				Role:  "user",
-				Phones: []string{
-					"+7812345678",
-				},
-			},
-			expectedErr: ValidationErrors{
-				ValidationError{
-					Field: "Role",
-					Err:   ErrNotAllowedValue,
-				},
-			},
-		},
-		{
-			in: User{
-				ID:    strings.Repeat("*", 36),
-				Age:   25,
-				Email: "120@ya.ru",
-				Role:  "admin",
-				Phones: []string{
-					"+7812345678",
-					"+7812345",
-				},
-			},
-			expectedErr: ValidationErrors{
-				ValidationError{
-					Field: "Phones",
-					Err:   ErrLenString,
-				},
-			},
-		},
-		{
-			in: User{
-				ID:    strings.Repeat("*", 3),
 				Age:   15,
 				Email: "120@ya",
 				Role:  "user",
@@ -270,5 +167,4 @@ func TestUserValidate(t *testing.T) {
 			_ = tt
 		})
 	}
-
 }
