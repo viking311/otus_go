@@ -58,8 +58,8 @@ func Validate(v interface{}) error {
 		}
 		validationRules := parseTag(validateTag)
 
-		switch field.Type.Kind() {
-		case reflect.String:
+		switch {
+		case field.Type.Kind() == reflect.String:
 			err := validateString(value.Field(i).String(), validationRules)
 			if err != nil {
 				validationErrors = append(validationErrors, ValidationError{
@@ -67,7 +67,7 @@ func Validate(v interface{}) error {
 					Err:   err,
 				})
 			}
-		case reflect.Int:
+		case field.Type.Kind() == reflect.Int:
 			err := validateInt(value.Field(i).Int(), validationRules)
 			if err != nil {
 				validationErrors = append(validationErrors, ValidationError{
@@ -75,7 +75,7 @@ func Validate(v interface{}) error {
 					Err:   err,
 				})
 			}
-		case reflect.Slice:
+		case field.Type.Kind() == reflect.Slice:
 			err := sliceValidate(value.Field(i), validationRules)
 			if err != nil {
 				validationErrors = append(validationErrors, ValidationError{

@@ -47,7 +47,7 @@ func lenStringValidation(value string, lValue int) bool {
 func regExpStringValidation(value, pattern string) (bool, error) {
 	matched, err := regexp.MatchString(pattern, value)
 	if err != nil {
-		return false, nil
+		return false, err
 	}
 
 	return matched, nil
