@@ -1,4 +1,4 @@
-module github.com/viking311/otus_g/hw11_telnet_client
+module github.com/viking311/otus_go/hw11_telnet_client
 
 go 1.22
 
