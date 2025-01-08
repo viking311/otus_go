@@ -12,8 +12,10 @@ type Config struct {
 	Address string
 }
 
+const defaultTimeout = 10 * time.Second
+
 func GetConfig() Config {
-	const defaultTimeout = 10 * time.Second
+
 	var cfg Config
 	var host, port string
 	flag.StringVar(&host, "host", "localhost", "host to connect to")
