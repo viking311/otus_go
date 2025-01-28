@@ -5,18 +5,23 @@ run:
     - !bench
 
 linters-settings:
+  funlen:
+    lines: 150
+    statements: 80
   depguard:
     rules:
-      require_pkg:
+      Main:
+        files:
+          - $all
+          - "!$test"
+        allow:
+          - $gostd
+      Test:
         files:
           - $test
         allow:
           - $gostd
-          - "github.com/stretchr/testify/require"
-  funlen:
-    lines: 150
-    statements: 80
-
+          - github.com/stretchr/testify
 issues:
   exclude-rules:
     - path: _test\.go
