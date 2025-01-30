@@ -16,6 +16,11 @@ linters-settings:
           - "!$test"
         allow:
           - $gostd
+          - github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal
+          - github.com/BurntSushi/toml
+          - github.com/sirupsen/logrus
+          - github.com/google/uuid
+          - github.com/lib/pq
       Test:
         files:
           - $test
