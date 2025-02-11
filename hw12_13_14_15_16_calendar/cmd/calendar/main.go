@@ -10,8 +10,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/viking311/otus_go/hw12_13_14_15_calendar/internal/storage"
-
 	sqlstorage "github.com/viking311/otus_go/hw12_13_14_15_calendar/internal/storage/sql"
 
 	"github.com/viking311/otus_go/hw12_13_14_15_calendar/internal/app"
@@ -33,7 +31,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	logg := logger.New(config.Logger.Level)
+	logg, err := logger.New(config.Logger.Level)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	repository, err := getStorage(config.StorageType, config.DB)
 	if err != nil {
@@ -68,7 +69,7 @@ func main() {
 	}
 }
 
-func getStorage(storageType string, cfg sqlstorage.DBConfig) (storage.RepositoryInterface, error) {
+func getStorage(storageType string, cfg sqlstorage.DBConfig) (app.RepositoryInterface, error) {
 	if storageType == "memory" {
 		rep := memorystorage.New()
 		return rep, nil
