@@ -3,22 +3,17 @@ package main
 import (
 	"context"
 	"flag"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
-	"github.com/fixme_my_friend/hw12_13_14_15_calendar/internal/app"
-	"github.com/fixme_my_friend/hw12_13_14_15_calendar/internal/logger"
-	internalhttp "github.com/fixme_my_friend/hw12_13_14_15_calendar/internal/server/http"
-	memorystorage "github.com/fixme_my_friend/hw12_13_14_15_calendar/internal/storage/memory"
+	"github.com/viking311/otus_go/hw12_13_14_15_calendar/internal/app"
+	"github.com/viking311/otus_go/hw12_13_14_15_calendar/internal/logger"
+	internalhttp "github.com/viking311/otus_go/hw12_13_14_15_calendar/internal/server/http"
+	memorystorage "github.com/viking311/otus_go/hw12_13_14_15_calendar/internal/storage/memory"
 )
-
-var configFile string
-
-func init() {
-	flag.StringVar(&configFile, "config", "/etc/calendar/config.toml", "Path to configuration file")
-}
 
 func main() {
 	flag.Parse()
@@ -28,7 +23,10 @@ func main() {
 		return
 	}
 
-	config := NewConfig()
+	config, err := NewConfig()
+	if err != nil {
+		log.Fatal(err)
+	}
 	logg := logger.New(config.Logger.Level)
 
 	storage := memorystorage.New()

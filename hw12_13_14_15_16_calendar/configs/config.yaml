@@ -1,5 +1,9 @@
-[logger]
-level = "INFO"
-
-# TODO
-# ...
+storage_type: "sql" # доступны memory, sql
+logger:
+  level: "INFO"
+db:
+  host: "localhost"
+  port: 5432
+  user: "postgres"
+  password: "mysecretpassword"
+  db_name: "postgres"
