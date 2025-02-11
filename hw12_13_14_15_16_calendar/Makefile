@@ -32,3 +32,12 @@ lint: install-lint-deps
 	golangci-lint run ./...
 
 .PHONY: build run build-img run-img version test lint
+
+migration-status:
+	goose status
+
+migration-up:
+	goose up
+
+migration-down:
+	goose down
