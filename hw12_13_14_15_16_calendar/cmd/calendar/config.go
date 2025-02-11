@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	sqlstorage "github.com/viking311/otus_go/hw12_13_14_15_calendar/internal/storage/sql"
 	"os"
 
 	"gopkg.in/yaml.v3"
@@ -11,21 +12,13 @@ import (
 // Организация конфига в main принуждает нас сужать API компонентов, использовать
 // при их конструировании только необходимые параметры, а также уменьшает вероятность циклической зависимости.
 type Config struct {
-	StorageType string     `yaml:"storage_type"`
-	Logger      LoggerConf `yaml:"logger"`
-	DB          DBConfig   `yaml:"db"`
+	StorageType string              `yaml:"storage_type"`
+	Logger      LoggerConf          `yaml:"logger"`
+	DB          sqlstorage.DBConfig `yaml:"db"`
 }
 
 type LoggerConf struct {
 	Level string `yaml:"level"`
-}
-
-type DBConfig struct {
-	Host     string `yaml:"host"`
-	Port     int    `yaml:"port"`
-	User     string `yaml:"user"`
-	Password string `yaml:"password"`
-	DBName   string `yaml:"db_name"`
 }
 
 var configFile string

@@ -3,11 +3,16 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+
+	"github.com/viking311/otus_go/hw12_13_14_15_calendar/internal/storage"
+
+	sqlstorage "github.com/viking311/otus_go/hw12_13_14_15_calendar/internal/storage/sql"
 
 	"github.com/viking311/otus_go/hw12_13_14_15_calendar/internal/app"
 	"github.com/viking311/otus_go/hw12_13_14_15_calendar/internal/logger"
@@ -27,10 +32,15 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	logg := logger.New(config.Logger.Level)
 
-	storage := memorystorage.New()
-	calendar := app.New(logg, storage)
+	repository, err := getStorage(config.StorageType, config.DB)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	calendar := app.New(logg, repository)
 
 	server := internalhttp.NewServer(logg, calendar)
 
@@ -56,4 +66,18 @@ func main() {
 		cancel()
 		os.Exit(1) //nolint:gocritic
 	}
+}
+
+func getStorage(storageType string, cfg sqlstorage.DBConfig) (storage.RepositoryInterface, error) {
+	if storageType == "memory" {
+		rep := memorystorage.New()
+		return rep, nil
+	}
+
+	if storageType == "sql" {
+		rep, err := sqlstorage.New(cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.DBName)
+		return rep, err
+	}
+
+	return nil, fmt.Errorf("unknown storage type: %s", storageType)
 }
