@@ -22,4 +22,10 @@ func (a *App) CreateEvent(ctx context.Context, id, title string) error {
 	// return a.storage.CreateEvent(storage.Event{ID: id, Title: title})
 }
 
-// TODO
+func (a *App) Start(ctx context.Context) error {
+	return a.storage.Connect(ctx)
+}
+
+func (a *App) Stop(ctx context.Context) error {
+	return a.storage.Close(ctx)
+}

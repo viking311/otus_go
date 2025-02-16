@@ -1,4 +1,4 @@
-storage_type: "sql" # доступны memory, sql
+storageType: "sql" # доступны memory, sql
 logger:
   level: "INFO"
 db:
@@ -6,4 +6,4 @@ db:
   port: 5432
   user: "postgres"
   password: "mysecretpassword"
-  db_name: "postgres"
+  dbName: "postgres"

@@ -6,9 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/viking311/otus_go/hw12_13_14_15_calendar/internal/storage"
-
 	_ "github.com/lib/pq" // подключаем драйвер
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage"
 )
 
 type Storage struct {
