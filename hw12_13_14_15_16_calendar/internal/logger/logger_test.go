@@ -40,5 +40,4 @@ func TestLogger(t *testing.T) {
 		logger.Debug(msg)
 		require.Empty(t, out.String())
 	})
-
 }

@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage"
 )
 
