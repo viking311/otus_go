@@ -9,20 +9,20 @@ import (
 
 func TestNewLogger(t *testing.T) {
 	t.Run("unknown log level", func(t *testing.T) {
-		_, err := New("some strage lavel")
+		_, err := New(Config{Level: "some strage lavel", FileName: "/tmp/calendar.log"})
 
 		require.Error(t, err)
 	})
 
 	t.Run("correct log level", func(t *testing.T) {
-		_, err := New("DEBUG")
+		_, err := New(Config{Level: "DEBUG", FileName: "/tmp/calendar.log"})
 
 		require.NoError(t, err)
 	})
 }
 
 func TestLogger(t *testing.T) {
-	logger, _ := New("INFO")
+	logger, _ := New(Config{Level: "INFO", FileName: "/tmp/calendar.log"})
 	msg := "test message"
 
 	t.Run("write info", func(t *testing.T) {

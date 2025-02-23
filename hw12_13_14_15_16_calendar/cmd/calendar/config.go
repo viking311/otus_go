@@ -4,6 +4,7 @@ import (
 	"flag"
 	"os"
 
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/logger"
 	internalhttp "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server/http"
 	sqlstorage "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage/sql"
 	"gopkg.in/yaml.v3"
@@ -14,13 +15,9 @@ import (
 // при их конструировании только необходимые параметры, а также уменьшает вероятность циклической зависимости.
 type Config struct {
 	StorageType string                        `yaml:"storageType"`
-	Logger      LoggerConf                    `yaml:"logger"`
+	Logger      logger.Config                 `yaml:"logger"`
 	DB          sqlstorage.DBConfig           `yaml:"db"`
 	HTTPServer  internalhttp.HTTPServerConfig `yaml:"httpServer"`
-}
-
-type LoggerConf struct {
-	Level string `yaml:"level"`
 }
 
 var configFile string

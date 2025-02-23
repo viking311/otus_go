@@ -30,7 +30,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	logg, err := logger.New(config.Logger.Level)
+	logg, err := logger.New(config.Logger)
 	if err != nil {
 		log.Fatal(err)
 	}

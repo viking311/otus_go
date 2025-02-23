@@ -1,15 +1,24 @@
 package logger
 
-import "github.com/sirupsen/logrus"
+import (
+	"os"
+
+	"github.com/sirupsen/logrus"
+)
+
+type Config struct {
+	Level    string `yaml:"level"`
+	FileName string `yaml:"fileName"`
+}
 
 type Logger struct {
 	logger *logrus.Logger
 }
 
-func New(level string) (*Logger, error) {
+func New(cfg Config) (*Logger, error) {
 	logger := logrus.New()
 
-	intLevel, err := logrus.ParseLevel(level)
+	intLevel, err := logrus.ParseLevel(cfg.Level)
 	if err != nil {
 		return nil, err
 	}
@@ -21,6 +30,12 @@ func New(level string) (*Logger, error) {
 	}
 
 	logger.SetFormatter(formatter)
+
+	file, err := os.OpenFile(cfg.FileName, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o666)
+	if err != nil {
+		return nil, err
+	}
+	logger.Out = file
 
 	return &Logger{
 			logger: logger,
