@@ -16,12 +16,6 @@ func New(logger Logger, storage RepositoryInterface) *App {
 	}
 }
 
-func (a *App) CreateEvent(ctx context.Context, id, title string) error {
-	// TODO
-	return nil
-	// return a.storage.CreateEvent(storage.Event{ID: id, Title: title})
-}
-
 func (a *App) Start(ctx context.Context) error {
 	return a.storage.Connect(ctx)
 }
