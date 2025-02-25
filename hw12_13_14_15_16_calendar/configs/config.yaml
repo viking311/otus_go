@@ -1,5 +1,14 @@
-[logger]
-level = "INFO"
-
-# TODO
-# ...
+storageType: "sql" # доступны memory, sql
+logger:
+  level: "INFO"
+  fileName: "/tmp/calendar.log"
+db:
+  host: "localhost"
+  port: 5432
+  user: "postgres"
+  password: "mysecretpassword"
+  dbName: "postgres"
+httpServer:
+  bindAddress: "localhost"
+  bindPort: "8080"
+  timeout: "30s"

@@ -3,22 +3,19 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
-	"github.com/fixme_my_friend/hw12_13_14_15_calendar/internal/app"
-	"github.com/fixme_my_friend/hw12_13_14_15_calendar/internal/logger"
-	internalhttp "github.com/fixme_my_friend/hw12_13_14_15_calendar/internal/server/http"
-	memorystorage "github.com/fixme_my_friend/hw12_13_14_15_calendar/internal/storage/memory"
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/app"
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/logger"
+	internalhttp "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server/http"
+	memorystorage "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage/memory"
+	sqlstorage "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage/sql"
 )
-
-var configFile string
-
-func init() {
-	flag.StringVar(&configFile, "config", "/etc/calendar/config.toml", "Path to configuration file")
-}
 
 func main() {
 	flag.Parse()
@@ -28,13 +25,24 @@ func main() {
 		return
 	}
 
-	config := NewConfig()
-	logg := logger.New(config.Logger.Level)
+	config, err := NewConfig()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	storage := memorystorage.New()
-	calendar := app.New(logg, storage)
+	logg, err := logger.New(config.Logger)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	server := internalhttp.NewServer(logg, calendar)
+	repository, err := getStorage(config.StorageType, config.DB)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	calendar := app.New(logg, repository)
+
+	server := internalhttp.NewServer(logg, calendar, config.HTTPServer)
 
 	ctx, cancel := signal.NotifyContext(context.Background(),
 		syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
@@ -58,4 +66,18 @@ func main() {
 		cancel()
 		os.Exit(1) //nolint:gocritic
 	}
+}
+
+func getStorage(storageType string, cfg sqlstorage.DBConfig) (app.Repository, error) {
+	if storageType == "memory" {
+		rep := memorystorage.New()
+		return rep, nil
+	}
+
+	if storageType == "sql" {
+		rep, err := sqlstorage.New(cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.DBName)
+		return rep, err
+	}
+
+	return nil, fmt.Errorf("unknown storage type: %s", storageType)
 }
