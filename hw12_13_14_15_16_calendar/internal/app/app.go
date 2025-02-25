@@ -5,11 +5,11 @@ import (
 )
 
 type App struct {
-	storage RepositoryInterface
+	storage Repository
 	logger  Logger
 }
 
-func New(logger Logger, storage RepositoryInterface) *App {
+func New(logger Logger, storage Repository) *App {
 	return &App{
 		logger:  logger,
 		storage: storage,

@@ -36,6 +36,9 @@ func NewConfig() (*Config, error) {
 		return nil, err
 	}
 
+	defer func() {
+		_ = file.Close()
+	}()
 	yamlDecoder := yaml.NewDecoder(file)
 
 	err = yamlDecoder.Decode(&cfg)

@@ -126,6 +126,11 @@ func (s *Storage) GetByUserID(userID int64) (storage.EventList, error) {
 		eventList = append(eventList, event)
 	}
 
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+
 	return eventList, nil
 }
 
@@ -153,6 +158,53 @@ func (s *Storage) GetByUserIDAndPeriod(userID int64, dateFrom, dateTo time.Time)
 	defer func() {
 		_ = rows.Close()
 	}()
+
+	for rows.Next() {
+		var desc, duration sql.NullString
+		var rTime sql.NullInt64
+		var title, id string
+		var eventTime time.Time
+		var userID int64
+
+		err = rows.Scan(
+			&id,
+			&title,
+			&desc,
+			&eventTime,
+			&duration,
+			&rTime,
+			&userID,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		event := storage.Event{
+			ID:       id,
+			Title:    title,
+			DateTime: eventTime,
+			UserID:   userID,
+		}
+
+		if desc.Valid {
+			event.Description = desc.String
+		}
+
+		if duration.Valid {
+			if d, err := time.ParseDuration(duration.String); err == nil {
+				event.Duration = d
+			}
+		}
+
+		if rTime.Valid {
+			event.RemindTime = rTime.Int64
+		}
+	}
+
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
 
 	return eventList, nil
 }
@@ -218,6 +270,11 @@ func (s *Storage) GetAll() (storage.EventList, error) {
 		if rTime.Valid {
 			event.RemindTime = rTime.Int64
 		}
+	}
+
+	err = rows.Err()
+	if err != nil {
+		return nil, err
 	}
 
 	return eventList, nil

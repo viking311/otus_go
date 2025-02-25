@@ -68,7 +68,7 @@ func main() {
 	}
 }
 
-func getStorage(storageType string, cfg sqlstorage.DBConfig) (app.RepositoryInterface, error) {
+func getStorage(storageType string, cfg sqlstorage.DBConfig) (app.Repository, error) {
 	if storageType == "memory" {
 		rep := memorystorage.New()
 		return rep, nil

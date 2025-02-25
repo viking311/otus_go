@@ -7,7 +7,7 @@ import (
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage"
 )
 
-type RepositoryInterface interface {
+type Repository interface {
 	Save(event storage.Event) (storage.Event, error)
 	Delete(event storage.Event) error
 	GetByUserID(userID int64) (storage.EventList, error)
