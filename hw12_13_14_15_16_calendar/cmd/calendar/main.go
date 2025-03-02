@@ -34,6 +34,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer func() {
+		err_close := logg.Close()
+		if err_close != nil {
+			log.Fatal(err_close)
+		}
+	}()
 
 	repository, err := getStorage(config.StorageType, config.DB)
 	if err != nil {
