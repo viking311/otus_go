@@ -5,8 +5,9 @@ import (
 	"net"
 	"net/http"
 
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage"
+
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/app"
-	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server/http/handler"
 )
 
 type Server struct {
@@ -18,6 +19,7 @@ type Server struct {
 type Application interface {
 	Start(ctx context.Context) error
 	Stop(ctx context.Context) error
+	GetEvents() storage.EventList
 }
 
 func NewServer(logger app.Logger, app Application, cfg HTTPServerConfig) *Server {
@@ -41,7 +43,11 @@ func (s *Server) Start(ctx context.Context) error {
 	middleware := NewLoggingMiddleware(s.logger)
 
 	mux := http.NewServeMux()
-	mux.Handle("/", middleware.loggingMiddleware(&handler.Stub{}))
+
+	eventsHandler := NewGetEventsHandler(s.app, s.logger)
+	mux.Handle("GET /events", middleware.loggingMiddleware(eventsHandler))
+
+	mux.Handle("/", middleware.loggingMiddleware(&Stub{}))
 
 	s.server.Handler = mux
 
