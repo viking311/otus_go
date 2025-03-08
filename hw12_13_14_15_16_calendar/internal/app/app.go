@@ -36,3 +36,13 @@ func (a *App) GetEvents() storage.EventList {
 
 	return result
 }
+
+func (a *App) GetEventById(id string) *storage.Event {
+	event, err := a.storage.GetByID(id)
+	if err != nil {
+		a.logger.Error(err.Error())
+		return nil
+	}
+
+	return event
+}

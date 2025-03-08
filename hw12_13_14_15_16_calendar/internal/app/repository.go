@@ -10,6 +10,7 @@ import (
 type Repository interface {
 	Save(event storage.Event) (storage.Event, error)
 	Delete(event storage.Event) error
+	GetByID(id string) (*storage.Event, error)
 	GetByUserID(userID int64) (storage.EventList, error)
 	GetByUserIDAndPeriod(userID int64, dateFrom, dateTo time.Time) (storage.EventList, error)
 	GetAll() (storage.EventList, error)
