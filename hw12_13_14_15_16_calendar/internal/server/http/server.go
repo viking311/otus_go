@@ -4,6 +4,7 @@ import (
 	"context"
 	"net"
 	"net/http"
+	"time"
 
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage"
 
@@ -24,6 +25,7 @@ type Application interface {
 	DeleteEvent(id string)
 	SaveEvent(event storage.Event) (*storage.Event, error)
 	GetEventsByUserId(userID int64) storage.EventList
+	GetEventsByUserIdAndDates(userID int64, dateFrom, dateTo time.Time) storage.EventList
 }
 
 func NewServer(logger app.Logger, app Application, cfg HTTPServerConfig) *Server {
@@ -61,6 +63,9 @@ func (s *Server) Start(ctx context.Context) error {
 
 	getEventsByUserHandler := NewGetEventsByUserHandler(s.app, s.logger)
 	mux.Handle("GET /users/{userId}/events", middleware.loggingMiddleware(getEventsByUserHandler))
+
+	getEventsByUserAndDatesHandker := NewGetEventsByUserAndDatesHandler(s.app, s.logger)
+	mux.Handle("GET /users/{userId}/events/{dateFrom}/{dateTo}", middleware.loggingMiddleware(getEventsByUserAndDatesHandker))
 
 	mux.Handle("/", middleware.loggingMiddleware(&Stub{}))
 

@@ -198,7 +198,7 @@ func (s *Storage) GetByUserIDAndPeriod(userID int64, dateFrom, dateTo time.Time)
     				remind_time,
     				user_id 
 				FROM events 
-				WHERE user_id=$1 and event_date between $2 AND $3`,
+				WHERE user_id=$1 and event_time between $2 AND $3`,
 		userID,
 		dateFrom.Format(time.RFC3339),
 		dateTo.Format(time.RFC3339))
@@ -249,6 +249,8 @@ func (s *Storage) GetByUserIDAndPeriod(userID int64, dateFrom, dateTo time.Time)
 		if rTime.Valid {
 			event.RemindTime = rTime.Int64
 		}
+
+		eventList = append(eventList, event)
 	}
 
 	err = rows.Err()

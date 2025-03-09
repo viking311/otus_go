@@ -108,3 +108,13 @@ func (a *App) GetEventsByUserId(userID int64) storage.EventList {
 
 	return result
 }
+
+func (a *App) GetEventsByUserIdAndDates(userID int64, dateFrom, dateTo time.Time) storage.EventList {
+	result, err := a.storage.GetByUserIDAndPeriod(userID, dateFrom, dateTo)
+	if err != nil {
+		a.logger.Error(err.Error())
+		return storage.EventList{}
+	}
+
+	return result
+}
