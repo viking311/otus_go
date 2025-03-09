@@ -9,7 +9,7 @@ import (
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/app"
 )
 
-type GetEventsResponse struct {
+type getEventsResponse struct {
 	Events storage.EventList `json:"events"`
 }
 
@@ -19,7 +19,7 @@ type GetEventsHandler struct {
 }
 
 func (ge *GetEventsHandler) ServeHTTP(w http.ResponseWriter, _ *http.Request) {
-	response := GetEventsResponse{
+	response := getEventsResponse{
 		Events: ge.app.GetEvents(),
 	}
 

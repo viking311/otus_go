@@ -97,3 +97,14 @@ func (a *App) SaveEvent(event storage.Event) (*storage.Event, error) {
 
 	return &newEvent, nil
 }
+
+func (a *App) GetEventsByUserId(userID int64) storage.EventList {
+	result, err := a.storage.GetByUserID(userID)
+
+	if err != nil {
+		a.logger.Error(err.Error())
+		return storage.EventList{}
+	}
+
+	return result
+}
