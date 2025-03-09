@@ -21,6 +21,8 @@ type Application interface {
 	Stop(ctx context.Context) error
 	GetEvents() storage.EventList
 	GetEventById(id string) *storage.Event
+	DeleteEvent(id string)
+	SaveEvent(event storage.Event) (*storage.Event, error)
 }
 
 func NewServer(logger app.Logger, app Application, cfg HTTPServerConfig) *Server {
@@ -47,8 +49,14 @@ func (s *Server) Start(ctx context.Context) error {
 	eventByIdHandler := NewGetEventById(s.app, s.logger)
 	mux.Handle("GET /events/{id}", middleware.loggingMiddleware(eventByIdHandler))
 
+	deleteEventHandler := NewDeleteEventHandler(s.app, s.logger)
+	mux.Handle("DELETE /events/{id}", middleware.loggingMiddleware(deleteEventHandler))
+
 	eventsHandler := NewGetEventsHandler(s.app, s.logger)
 	mux.Handle("GET /events", middleware.loggingMiddleware(eventsHandler))
+
+	saveEventHandler := NewSaveEventHandler(s.app, s.logger)
+	mux.Handle("POST /events", middleware.loggingMiddleware(saveEventHandler))
 
 	mux.Handle("/", middleware.loggingMiddleware(&Stub{}))
 

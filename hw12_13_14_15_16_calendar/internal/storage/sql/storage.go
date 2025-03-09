@@ -320,6 +320,7 @@ func (s *Storage) GetAll() (storage.EventList, error) {
 		if rTime.Valid {
 			event.RemindTime = rTime.Int64
 		}
+		eventList = append(eventList, event)
 	}
 
 	err = rows.Err()
