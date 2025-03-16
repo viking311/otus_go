@@ -1,9 +1,11 @@
-package internalhttp
+package handler
 
 import (
 	"encoding/json"
 	"net/http"
 	"strconv"
+
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server"
 
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage"
 
@@ -15,7 +17,7 @@ type getEventsByUserResponse struct {
 }
 
 type GetEventsByUserHandler struct {
-	app    Application
+	app    server.Application
 	logger app.Logger
 }
 
@@ -39,7 +41,7 @@ func (geu *GetEventsByUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Requ
 	}
 }
 
-func NewGetEventsByUserHandler(app Application, logger app.Logger) *GetEventsByUserHandler {
+func NewGetEventsByUserHandler(app server.Application, logger app.Logger) *GetEventsByUserHandler {
 	return &GetEventsByUserHandler{
 		app:    app,
 		logger: logger,

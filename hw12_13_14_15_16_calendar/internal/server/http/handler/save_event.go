@@ -1,9 +1,11 @@
-package internalhttp
+package handler
 
 import (
 	"encoding/json"
 	"errors"
 	"net/http"
+
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server"
 
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage"
 
@@ -17,7 +19,7 @@ type SaveEventResponse struct {
 }
 
 type SaveEventHandler struct {
-	app    Application
+	app    server.Application
 	logger app.Logger
 }
 
@@ -64,7 +66,7 @@ func (se *SaveEventHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func NewSaveEventHandler(app Application, logger app.Logger) *SaveEventHandler {
+func NewSaveEventHandler(app server.Application, logger app.Logger) *SaveEventHandler {
 	return &SaveEventHandler{
 		app:    app,
 		logger: logger,

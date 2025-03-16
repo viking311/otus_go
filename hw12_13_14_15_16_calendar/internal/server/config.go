@@ -1,4 +1,4 @@
-package internalhttp
+package server
 
 import "time"
 

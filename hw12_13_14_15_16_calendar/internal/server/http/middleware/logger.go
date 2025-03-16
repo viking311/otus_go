@@ -1,4 +1,4 @@
-package internalhttp
+package middleware
 
 import (
 	"fmt"
@@ -12,7 +12,7 @@ type LoggerMiddleware struct {
 	logger app.Logger
 }
 
-func (lm *LoggerMiddleware) loggingMiddleware(next http.Handler) http.Handler {
+func (lm *LoggerMiddleware) LoggingMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 		wr := NewWrapResponseWriter(w)
