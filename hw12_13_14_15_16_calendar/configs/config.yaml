@@ -12,3 +12,6 @@ httpServer:
   bindAddress: "localhost"
   bindPort: "8080"
   timeout: "30s"
+grpcServer:
+  bindAddress: ""
+  bindPort: "10100"

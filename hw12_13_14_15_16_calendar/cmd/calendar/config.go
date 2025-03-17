@@ -19,6 +19,7 @@ type Config struct {
 	Logger      logger.Config           `yaml:"logger"`
 	DB          sqlstorage.DBConfig     `yaml:"db"`
 	HTTPServer  server.HTTPServerConfig `yaml:"httpServer"`
+	GRPCConfig  server.GRPCServerConfig `yaml:"grpcServer"`
 }
 
 var configFile string

@@ -49,7 +49,7 @@ func main() {
 
 	calendar := app.New(logg, repository)
 
-	srv := unionserver.NewServer(logg, calendar, config.HTTPServer)
+	srv := unionserver.NewServer(logg, calendar, config.HTTPServer, config.GRPCConfig)
 
 	ctx, cancel := signal.NotifyContext(context.Background(),
 		syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
