@@ -18,7 +18,7 @@ type Event struct {
 type jsonEvent struct {
 	ID          string `json:"id,omitempty"`
 	Title       string `json:"title"`
-	UserID      int64  `json:"userID"`
+	UserID      int64  `json:"userId"`
 	DateTime    int64  `json:"dateTime"`
 	Description string `json:"description"`
 	Duration    string `json:"duration"`

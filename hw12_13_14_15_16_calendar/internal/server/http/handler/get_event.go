@@ -4,9 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server"
-
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/app"
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server"
 )
 
 type GetEventHandler struct {
@@ -17,7 +16,7 @@ type GetEventHandler struct {
 func (ge *GetEventHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
 
-	event := ge.app.GetEventById(id)
+	event := ge.app.GetEventByID(id)
 
 	if event == nil {
 		w.WriteHeader(http.StatusNotFound)
@@ -39,7 +38,7 @@ func (ge *GetEventHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func NewGetEventById(app server.Application, logger app.Logger) *GetEventHandler {
+func NewGetEventByID(app server.Application, logger app.Logger) *GetEventHandler {
 	return &GetEventHandler{
 		app:    app,
 		logger: logger,

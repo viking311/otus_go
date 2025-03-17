@@ -4,15 +4,11 @@ import (
 	"context"
 	"net"
 
-	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/app"
-
-	"google.golang.org/grpc/reflection"
-
 	pb "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/api"
-
-	"google.golang.org/grpc"
-
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/app"
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 type Server struct {
@@ -46,7 +42,6 @@ func (s *Server) Start(ctx context.Context) error {
 }
 
 func (s *Server) Stop(_ context.Context) error {
-
 	s.grpcServer.GracefulStop()
 	return nil
 }

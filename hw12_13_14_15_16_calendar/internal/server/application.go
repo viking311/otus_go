@@ -11,9 +11,9 @@ type Application interface {
 	Start(ctx context.Context) error
 	Stop(ctx context.Context) error
 	GetEvents() storage.EventList
-	GetEventById(id string) *storage.Event
+	GetEventByID(id string) *storage.Event
 	DeleteEvent(id string)
 	SaveEvent(event storage.Event) (*storage.Event, error)
-	GetEventsByUserId(userID int64) storage.EventList
-	GetEventsByUserIdAndDates(userID int64, dateFrom, dateTo time.Time) storage.EventList
+	GetEventsByUserID(userID int64) storage.EventList
+	GetEventsByUserIDAndDates(userID int64, dateFrom, dateTo time.Time) storage.EventList
 }

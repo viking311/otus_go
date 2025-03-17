@@ -6,11 +6,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server"
-
-	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage"
-
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/app"
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server"
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage"
 )
 
 type getEventsByUserAndDatesResponse struct {
@@ -51,7 +49,7 @@ func (gd *GetEventsByUserAndDatesHandler) ServeHTTP(w http.ResponseWriter, r *ht
 	toTime := time.Unix(dateTo, 0)
 
 	response := getEventsByUserAndDatesResponse{
-		Events: gd.app.GetEventsByUserIdAndDates(userID, fromTime, toTime),
+		Events: gd.app.GetEventsByUserIDAndDates(userID, fromTime, toTime),
 	}
 
 	err = json.NewEncoder(w).Encode(response)

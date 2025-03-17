@@ -8,9 +8,9 @@ option go_package = "./;pb";
 
 service EventService{
   rpc GetAllEvents(GetAllEventsRequest) returns (EventList){}
-  rpc GetEventById(GetEventByIdRequest) returns (Event);
-  rpc GetEventsByUserId(GetEventsByUserIdRequest) returns (EventList){}
-  rpc GetEventsByUserIdAndDates(GetEventsByUserIdAndDatesRequest) returns (EventList) {}
+  rpc GetEventsByID(GetEventByIdRequest) returns (Event);
+  rpc GetEventsByUserID(GetEventsByUserIdRequest) returns (EventList){}
+  rpc GetEventsByUserIDAndDates(GetEventsByUserIdAndDatesRequest) returns (EventList) {}
 
   rpc SaveEvent(SaveEventRequest) returns (Event){}
   rpc DeleteEvent(DeleteEventRequest) returns (DeleteEventResponse) {}

@@ -29,7 +29,6 @@ func (a *App) Stop(ctx context.Context) error {
 
 func (a *App) GetEvents() storage.EventList {
 	result, err := a.storage.GetAll()
-
 	if err != nil {
 		a.logger.Error(err.Error())
 		return storage.EventList{}
@@ -38,7 +37,7 @@ func (a *App) GetEvents() storage.EventList {
 	return result
 }
 
-func (a *App) GetEventById(id string) *storage.Event {
+func (a *App) GetEventByID(id string) *storage.Event {
 	event, err := a.storage.GetByID(id)
 	if err != nil {
 		a.logger.Error(err.Error())
@@ -98,9 +97,8 @@ func (a *App) SaveEvent(event storage.Event) (*storage.Event, error) {
 	return &newEvent, nil
 }
 
-func (a *App) GetEventsByUserId(userID int64) storage.EventList {
+func (a *App) GetEventsByUserID(userID int64) storage.EventList {
 	result, err := a.storage.GetByUserID(userID)
-
 	if err != nil {
 		a.logger.Error(err.Error())
 		return storage.EventList{}
@@ -109,7 +107,7 @@ func (a *App) GetEventsByUserId(userID int64) storage.EventList {
 	return result
 }
 
-func (a *App) GetEventsByUserIdAndDates(userID int64, dateFrom, dateTo time.Time) storage.EventList {
+func (a *App) GetEventsByUserIDAndDates(userID int64, dateFrom, dateTo time.Time) storage.EventList {
 	result, err := a.storage.GetByUserIDAndPeriod(userID, dateFrom, dateTo)
 	if err != nil {
 		a.logger.Error(err.Error())

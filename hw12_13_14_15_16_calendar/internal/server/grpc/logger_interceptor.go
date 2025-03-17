@@ -5,13 +5,12 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/app"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/peer"
 	"google.golang.org/grpc/status"
-
-	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/app"
-	"google.golang.org/grpc"
 )
 
 type LoggerInterceptor struct {
@@ -19,7 +18,12 @@ type LoggerInterceptor struct {
 }
 
 func (li *LoggerInterceptor) GetInterceptor() grpc.UnaryServerInterceptor {
-	return func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (resp any, err error) {
+	return func(
+		ctx context.Context,
+		req any,
+		info *grpc.UnaryServerInfo,
+		handler grpc.UnaryHandler,
+	) (resp any, err error) {
 		start := time.Now()
 		resp, err = handler(ctx, req)
 		end := time.Since(start)

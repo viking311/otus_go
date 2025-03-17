@@ -20,9 +20,9 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	EventService_GetAllEvents_FullMethodName              = "/event.EventService/GetAllEvents"
-	EventService_GetEventById_FullMethodName              = "/event.EventService/GetEventById"
-	EventService_GetEventsByUserId_FullMethodName         = "/event.EventService/GetEventsByUserId"
-	EventService_GetEventsByUserIdAndDates_FullMethodName = "/event.EventService/GetEventsByUserIdAndDates"
+	EventService_GetEventsByID_FullMethodName             = "/event.EventService/GetEventsByID"
+	EventService_GetEventsByUserID_FullMethodName         = "/event.EventService/GetEventsByUserID"
+	EventService_GetEventsByUserIDAndDates_FullMethodName = "/event.EventService/GetEventsByUserIDAndDates"
 	EventService_SaveEvent_FullMethodName                 = "/event.EventService/SaveEvent"
 	EventService_DeleteEvent_FullMethodName               = "/event.EventService/DeleteEvent"
 )
@@ -32,9 +32,9 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type EventServiceClient interface {
 	GetAllEvents(ctx context.Context, in *GetAllEventsRequest, opts ...grpc.CallOption) (*EventList, error)
-	GetEventById(ctx context.Context, in *GetEventByIdRequest, opts ...grpc.CallOption) (*Event, error)
-	GetEventsByUserId(ctx context.Context, in *GetEventsByUserIdRequest, opts ...grpc.CallOption) (*EventList, error)
-	GetEventsByUserIdAndDates(ctx context.Context, in *GetEventsByUserIdAndDatesRequest, opts ...grpc.CallOption) (*EventList, error)
+	GetEventsByID(ctx context.Context, in *GetEventByIdRequest, opts ...grpc.CallOption) (*Event, error)
+	GetEventsByUserID(ctx context.Context, in *GetEventsByUserIdRequest, opts ...grpc.CallOption) (*EventList, error)
+	GetEventsByUserIDAndDates(ctx context.Context, in *GetEventsByUserIdAndDatesRequest, opts ...grpc.CallOption) (*EventList, error)
 	SaveEvent(ctx context.Context, in *SaveEventRequest, opts ...grpc.CallOption) (*Event, error)
 	DeleteEvent(ctx context.Context, in *DeleteEventRequest, opts ...grpc.CallOption) (*DeleteEventResponse, error)
 }
@@ -57,30 +57,30 @@ func (c *eventServiceClient) GetAllEvents(ctx context.Context, in *GetAllEventsR
 	return out, nil
 }
 
-func (c *eventServiceClient) GetEventById(ctx context.Context, in *GetEventByIdRequest, opts ...grpc.CallOption) (*Event, error) {
+func (c *eventServiceClient) GetEventsByID(ctx context.Context, in *GetEventByIdRequest, opts ...grpc.CallOption) (*Event, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Event)
-	err := c.cc.Invoke(ctx, EventService_GetEventById_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, EventService_GetEventsByID_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *eventServiceClient) GetEventsByUserId(ctx context.Context, in *GetEventsByUserIdRequest, opts ...grpc.CallOption) (*EventList, error) {
+func (c *eventServiceClient) GetEventsByUserID(ctx context.Context, in *GetEventsByUserIdRequest, opts ...grpc.CallOption) (*EventList, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(EventList)
-	err := c.cc.Invoke(ctx, EventService_GetEventsByUserId_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, EventService_GetEventsByUserID_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *eventServiceClient) GetEventsByUserIdAndDates(ctx context.Context, in *GetEventsByUserIdAndDatesRequest, opts ...grpc.CallOption) (*EventList, error) {
+func (c *eventServiceClient) GetEventsByUserIDAndDates(ctx context.Context, in *GetEventsByUserIdAndDatesRequest, opts ...grpc.CallOption) (*EventList, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(EventList)
-	err := c.cc.Invoke(ctx, EventService_GetEventsByUserIdAndDates_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, EventService_GetEventsByUserIDAndDates_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -112,9 +112,9 @@ func (c *eventServiceClient) DeleteEvent(ctx context.Context, in *DeleteEventReq
 // for forward compatibility.
 type EventServiceServer interface {
 	GetAllEvents(context.Context, *GetAllEventsRequest) (*EventList, error)
-	GetEventById(context.Context, *GetEventByIdRequest) (*Event, error)
-	GetEventsByUserId(context.Context, *GetEventsByUserIdRequest) (*EventList, error)
-	GetEventsByUserIdAndDates(context.Context, *GetEventsByUserIdAndDatesRequest) (*EventList, error)
+	GetEventsByID(context.Context, *GetEventByIdRequest) (*Event, error)
+	GetEventsByUserID(context.Context, *GetEventsByUserIdRequest) (*EventList, error)
+	GetEventsByUserIDAndDates(context.Context, *GetEventsByUserIdAndDatesRequest) (*EventList, error)
 	SaveEvent(context.Context, *SaveEventRequest) (*Event, error)
 	DeleteEvent(context.Context, *DeleteEventRequest) (*DeleteEventResponse, error)
 	mustEmbedUnimplementedEventServiceServer()
@@ -130,14 +130,14 @@ type UnimplementedEventServiceServer struct{}
 func (UnimplementedEventServiceServer) GetAllEvents(context.Context, *GetAllEventsRequest) (*EventList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllEvents not implemented")
 }
-func (UnimplementedEventServiceServer) GetEventById(context.Context, *GetEventByIdRequest) (*Event, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetEventById not implemented")
+func (UnimplementedEventServiceServer) GetEventsByID(context.Context, *GetEventByIdRequest) (*Event, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetEventsByID not implemented")
 }
-func (UnimplementedEventServiceServer) GetEventsByUserId(context.Context, *GetEventsByUserIdRequest) (*EventList, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetEventsByUserId not implemented")
+func (UnimplementedEventServiceServer) GetEventsByUserID(context.Context, *GetEventsByUserIdRequest) (*EventList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetEventsByUserID not implemented")
 }
-func (UnimplementedEventServiceServer) GetEventsByUserIdAndDates(context.Context, *GetEventsByUserIdAndDatesRequest) (*EventList, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetEventsByUserIdAndDates not implemented")
+func (UnimplementedEventServiceServer) GetEventsByUserIDAndDates(context.Context, *GetEventsByUserIdAndDatesRequest) (*EventList, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetEventsByUserIDAndDates not implemented")
 }
 func (UnimplementedEventServiceServer) SaveEvent(context.Context, *SaveEventRequest) (*Event, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SaveEvent not implemented")
@@ -184,56 +184,56 @@ func _EventService_GetAllEvents_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _EventService_GetEventById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _EventService_GetEventsByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetEventByIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(EventServiceServer).GetEventById(ctx, in)
+		return srv.(EventServiceServer).GetEventsByID(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: EventService_GetEventById_FullMethodName,
+		FullMethod: EventService_GetEventsByID_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EventServiceServer).GetEventById(ctx, req.(*GetEventByIdRequest))
+		return srv.(EventServiceServer).GetEventsByID(ctx, req.(*GetEventByIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _EventService_GetEventsByUserId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _EventService_GetEventsByUserID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetEventsByUserIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(EventServiceServer).GetEventsByUserId(ctx, in)
+		return srv.(EventServiceServer).GetEventsByUserID(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: EventService_GetEventsByUserId_FullMethodName,
+		FullMethod: EventService_GetEventsByUserID_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EventServiceServer).GetEventsByUserId(ctx, req.(*GetEventsByUserIdRequest))
+		return srv.(EventServiceServer).GetEventsByUserID(ctx, req.(*GetEventsByUserIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _EventService_GetEventsByUserIdAndDates_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _EventService_GetEventsByUserIDAndDates_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetEventsByUserIdAndDatesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(EventServiceServer).GetEventsByUserIdAndDates(ctx, in)
+		return srv.(EventServiceServer).GetEventsByUserIDAndDates(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: EventService_GetEventsByUserIdAndDates_FullMethodName,
+		FullMethod: EventService_GetEventsByUserIDAndDates_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EventServiceServer).GetEventsByUserIdAndDates(ctx, req.(*GetEventsByUserIdAndDatesRequest))
+		return srv.(EventServiceServer).GetEventsByUserIDAndDates(ctx, req.(*GetEventsByUserIdAndDatesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -286,16 +286,16 @@ var EventService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _EventService_GetAllEvents_Handler,
 		},
 		{
-			MethodName: "GetEventById",
-			Handler:    _EventService_GetEventById_Handler,
+			MethodName: "GetEventsByID",
+			Handler:    _EventService_GetEventsByID_Handler,
 		},
 		{
-			MethodName: "GetEventsByUserId",
-			Handler:    _EventService_GetEventsByUserId_Handler,
+			MethodName: "GetEventsByUserID",
+			Handler:    _EventService_GetEventsByUserID_Handler,
 		},
 		{
-			MethodName: "GetEventsByUserIdAndDates",
-			Handler:    _EventService_GetEventsByUserIdAndDates_Handler,
+			MethodName: "GetEventsByUserIDAndDates",
+			Handler:    _EventService_GetEventsByUserIDAndDates_Handler,
 		},
 		{
 			MethodName: "SaveEvent",

@@ -5,11 +5,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server"
-
-	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage"
-
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/app"
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server"
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage"
 )
 
 type getEventsByUserResponse struct {
@@ -32,7 +30,7 @@ func (geu *GetEventsByUserHandler) ServeHTTP(w http.ResponseWriter, r *http.Requ
 	}
 
 	response := getEventsByUserResponse{
-		Events: geu.app.GetEventsByUserId(userID),
+		Events: geu.app.GetEventsByUserID(userID),
 	}
 
 	err = json.NewEncoder(w).Encode(response)

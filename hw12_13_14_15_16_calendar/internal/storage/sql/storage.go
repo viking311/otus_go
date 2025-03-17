@@ -77,12 +77,12 @@ func (s *Storage) GetByID(id string) (*storage.Event, error) {
 
 	var desc, duration sql.NullString
 	var rTime sql.NullInt64
-	var title, eventId string
+	var title, eventID string
 	var eventTime time.Time
 	var userID int64
 
 	err := row.Scan(
-		&eventId,
+		&eventID,
 		&title,
 		&desc,
 		&eventTime,

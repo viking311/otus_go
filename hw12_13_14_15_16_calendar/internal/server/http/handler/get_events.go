@@ -4,11 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server"
-
-	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage"
-
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/app"
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server"
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage"
 )
 
 type getEventsResponse struct {

@@ -5,15 +5,13 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
-	unionserver "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server/union_server"
-
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/app"
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/logger"
+	unionserver "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server/union_server"
 	memorystorage "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage/memory"
 	sqlstorage "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage/sql"
 )
@@ -44,7 +42,8 @@ func main() {
 
 	repository, err := getStorage(config.StorageType, config.DB)
 	if err != nil {
-		log.Fatal(err)
+		logg.Error(err.Error())
+		return
 	}
 
 	calendar := app.New(logg, repository)
@@ -71,7 +70,7 @@ func main() {
 	if err := srv.Start(ctx); err != nil {
 		logg.Error("failed to start http server: " + err.Error())
 		cancel()
-		os.Exit(1) //nolint:gocritic
+		return
 	}
 }
 

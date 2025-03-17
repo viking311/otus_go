@@ -5,17 +5,13 @@ import (
 	"errors"
 	"time"
 
+	pb "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/api"
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/app"
-
-	"google.golang.org/grpc/codes"
-
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server"
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage"
-
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
-
-	pb "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/api"
-	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server"
 )
 
 type Service struct {
@@ -23,7 +19,7 @@ type Service struct {
 	app server.Application
 }
 
-func (s *Service) GetAllEvents(_ context.Context, request *pb.GetAllEventsRequest) (*pb.EventList, error) {
+func (s *Service) GetAllEvents(_ context.Context, _ *pb.GetAllEventsRequest) (*pb.EventList, error) {
 	eventList := s.app.GetEvents()
 	response := pb.EventList{
 		Events: make([]*pb.Event, 0, len(eventList)),
@@ -36,8 +32,8 @@ func (s *Service) GetAllEvents(_ context.Context, request *pb.GetAllEventsReques
 	return &response, nil
 }
 
-func (s *Service) GetEventById(_ context.Context, request *pb.GetEventByIdRequest) (*pb.Event, error) {
-	event := s.app.GetEventById(request.GetId())
+func (s *Service) GetEventByID(_ context.Context, request *pb.GetEventByIdRequest) (*pb.Event, error) {
+	event := s.app.GetEventByID(request.GetId())
 	if event == nil {
 		return nil, status.Error(codes.NotFound, "event not found")
 	}
@@ -45,8 +41,8 @@ func (s *Service) GetEventById(_ context.Context, request *pb.GetEventByIdReques
 	return s.storageEventToProtoEvent(*event), nil
 }
 
-func (s *Service) GetEventsByUserId(_ context.Context, request *pb.GetEventsByUserIdRequest) (*pb.EventList, error) {
-	eventList := s.app.GetEventsByUserId(request.GetUserId())
+func (s *Service) GetEventsByUserID(_ context.Context, request *pb.GetEventsByUserIdRequest) (*pb.EventList, error) {
+	eventList := s.app.GetEventsByUserID(request.GetUserId())
 
 	response := pb.EventList{
 		Events: make([]*pb.Event, 0, len(eventList)),
@@ -59,11 +55,14 @@ func (s *Service) GetEventsByUserId(_ context.Context, request *pb.GetEventsByUs
 	return &response, nil
 }
 
-func (s *Service) GetEventsByUserIdAndDates(_ context.Context, request *pb.GetEventsByUserIdAndDatesRequest) (*pb.EventList, error) {
+func (s *Service) GetEventsByUserIDAndDates(
+	_ context.Context,
+	request *pb.GetEventsByUserIdAndDatesRequest,
+) (*pb.EventList, error) {
 	startTime := time.Unix(request.GetStartTime().GetSeconds(), int64(request.GetStartTime().GetNanos()))
 	endTime := time.Unix(request.GetEndTime().GetSeconds(), int64(request.GetEndTime().GetNanos()))
 
-	eventList := s.app.GetEventsByUserIdAndDates(request.GetUserId(), startTime, endTime)
+	eventList := s.app.GetEventsByUserIDAndDates(request.GetUserId(), startTime, endTime)
 
 	response := pb.EventList{
 		Events: make([]*pb.Event, 0, len(eventList)),

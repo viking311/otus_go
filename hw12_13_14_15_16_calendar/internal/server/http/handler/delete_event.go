@@ -3,9 +3,8 @@ package handler
 import (
 	"net/http"
 
-	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server"
-
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/app"
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server"
 )
 
 type DeleteEventHandler struct {
@@ -13,7 +12,7 @@ type DeleteEventHandler struct {
 	logger app.Logger
 }
 
-func (de *DeleteEventHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (de *DeleteEventHandler) ServeHTTP(_ http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
 	de.app.DeleteEvent(id)
 }

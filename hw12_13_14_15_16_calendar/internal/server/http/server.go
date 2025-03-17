@@ -6,13 +6,10 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server"
-
-	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server/http/middleware"
-
-	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server/http/handler"
-
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/app"
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server"
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server/http/handler"
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server/http/middleware"
 )
 
 type Server struct {
@@ -42,8 +39,8 @@ func (s *Server) Start(ctx context.Context) error {
 	LoggerMiddleware := middleware.NewLoggingMiddleware(s.logger)
 
 	mux := http.NewServeMux()
-	eventByIdHandler := handler.NewGetEventById(s.app, s.logger)
-	mux.Handle("GET /events/{id}", LoggerMiddleware.LoggingMiddleware(eventByIdHandler))
+	eventByIDHandler := handler.NewGetEventByID(s.app, s.logger)
+	mux.Handle("GET /events/{id}", LoggerMiddleware.LoggingMiddleware(eventByIDHandler))
 
 	deleteEventHandler := handler.NewDeleteEventHandler(s.app, s.logger)
 	mux.Handle("DELETE /events/{id}", LoggerMiddleware.LoggingMiddleware(deleteEventHandler))
@@ -58,7 +55,8 @@ func (s *Server) Start(ctx context.Context) error {
 	mux.Handle("GET /users/{userId}/events", LoggerMiddleware.LoggingMiddleware(getEventsByUserHandler))
 
 	getEventsByUserAndDatesHandker := handler.NewGetEventsByUserAndDatesHandler(s.app, s.logger)
-	mux.Handle("GET /users/{userId}/events/{dateFrom}/{dateTo}", LoggerMiddleware.LoggingMiddleware(getEventsByUserAndDatesHandker))
+	mux.Handle("GET /users/{userId}/events/{dateFrom}/{dateTo}",
+		LoggerMiddleware.LoggingMiddleware(getEventsByUserAndDatesHandker))
 
 	mux.Handle("/", LoggerMiddleware.LoggingMiddleware(&handler.Stub{}))
 

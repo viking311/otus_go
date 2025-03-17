@@ -3,11 +3,9 @@ package unionserver
 import (
 	"context"
 
-	internalgrpc "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server/grpc"
-
-	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server"
-
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/app"
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server"
+	internalgrpc "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server/grpc"
 	internalhttp "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server/http"
 )
 
@@ -37,7 +35,12 @@ func (s *Server) Stop(ctx context.Context) error {
 	return s.httpServer.Stop(ctx)
 }
 
-func NewServer(logger app.Logger, app server.Application, httpCfg server.HTTPServerConfig, grpcCfg server.GRPCServerConfig) *Server {
+func NewServer(
+	logger app.Logger,
+	app server.Application,
+	httpCfg server.HTTPServerConfig,
+	grpcCfg server.GRPCServerConfig,
+) *Server {
 	return &Server{
 		logger:     logger,
 		httpServer: internalhttp.NewServer(logger, app, httpCfg.BindAddress, httpCfg.BindPort, httpCfg.Timeout),
