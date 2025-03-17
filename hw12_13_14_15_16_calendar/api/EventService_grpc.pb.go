@@ -23,6 +23,8 @@ const (
 	EventService_GetEventById_FullMethodName              = "/event.EventService/GetEventById"
 	EventService_GetEventsByUserId_FullMethodName         = "/event.EventService/GetEventsByUserId"
 	EventService_GetEventsByUserIdAndDates_FullMethodName = "/event.EventService/GetEventsByUserIdAndDates"
+	EventService_SaveEvent_FullMethodName                 = "/event.EventService/SaveEvent"
+	EventService_DeleteEvent_FullMethodName               = "/event.EventService/DeleteEvent"
 )
 
 // EventServiceClient is the client API for EventService service.
@@ -33,6 +35,8 @@ type EventServiceClient interface {
 	GetEventById(ctx context.Context, in *GetEventByIdRequest, opts ...grpc.CallOption) (*Event, error)
 	GetEventsByUserId(ctx context.Context, in *GetEventsByUserIdRequest, opts ...grpc.CallOption) (*EventList, error)
 	GetEventsByUserIdAndDates(ctx context.Context, in *GetEventsByUserIdAndDatesRequest, opts ...grpc.CallOption) (*EventList, error)
+	SaveEvent(ctx context.Context, in *SaveEventRequest, opts ...grpc.CallOption) (*Event, error)
+	DeleteEvent(ctx context.Context, in *DeleteEventRequest, opts ...grpc.CallOption) (*DeleteEventResponse, error)
 }
 
 type eventServiceClient struct {
@@ -83,6 +87,26 @@ func (c *eventServiceClient) GetEventsByUserIdAndDates(ctx context.Context, in *
 	return out, nil
 }
 
+func (c *eventServiceClient) SaveEvent(ctx context.Context, in *SaveEventRequest, opts ...grpc.CallOption) (*Event, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Event)
+	err := c.cc.Invoke(ctx, EventService_SaveEvent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *eventServiceClient) DeleteEvent(ctx context.Context, in *DeleteEventRequest, opts ...grpc.CallOption) (*DeleteEventResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteEventResponse)
+	err := c.cc.Invoke(ctx, EventService_DeleteEvent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // EventServiceServer is the server API for EventService service.
 // All implementations must embed UnimplementedEventServiceServer
 // for forward compatibility.
@@ -91,6 +115,8 @@ type EventServiceServer interface {
 	GetEventById(context.Context, *GetEventByIdRequest) (*Event, error)
 	GetEventsByUserId(context.Context, *GetEventsByUserIdRequest) (*EventList, error)
 	GetEventsByUserIdAndDates(context.Context, *GetEventsByUserIdAndDatesRequest) (*EventList, error)
+	SaveEvent(context.Context, *SaveEventRequest) (*Event, error)
+	DeleteEvent(context.Context, *DeleteEventRequest) (*DeleteEventResponse, error)
 	mustEmbedUnimplementedEventServiceServer()
 }
 
@@ -112,6 +138,12 @@ func (UnimplementedEventServiceServer) GetEventsByUserId(context.Context, *GetEv
 }
 func (UnimplementedEventServiceServer) GetEventsByUserIdAndDates(context.Context, *GetEventsByUserIdAndDatesRequest) (*EventList, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetEventsByUserIdAndDates not implemented")
+}
+func (UnimplementedEventServiceServer) SaveEvent(context.Context, *SaveEventRequest) (*Event, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SaveEvent not implemented")
+}
+func (UnimplementedEventServiceServer) DeleteEvent(context.Context, *DeleteEventRequest) (*DeleteEventResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteEvent not implemented")
 }
 func (UnimplementedEventServiceServer) mustEmbedUnimplementedEventServiceServer() {}
 func (UnimplementedEventServiceServer) testEmbeddedByValue()                      {}
@@ -206,6 +238,42 @@ func _EventService_GetEventsByUserIdAndDates_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _EventService_SaveEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SaveEventRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EventServiceServer).SaveEvent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: EventService_SaveEvent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EventServiceServer).SaveEvent(ctx, req.(*SaveEventRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _EventService_DeleteEvent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteEventRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EventServiceServer).DeleteEvent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: EventService_DeleteEvent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EventServiceServer).DeleteEvent(ctx, req.(*DeleteEventRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // EventService_ServiceDesc is the grpc.ServiceDesc for EventService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -228,6 +296,14 @@ var EventService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetEventsByUserIdAndDates",
 			Handler:    _EventService_GetEventsByUserIdAndDates_Handler,
+		},
+		{
+			MethodName: "SaveEvent",
+			Handler:    _EventService_SaveEvent_Handler,
+		},
+		{
+			MethodName: "DeleteEvent",
+			Handler:    _EventService_DeleteEvent_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

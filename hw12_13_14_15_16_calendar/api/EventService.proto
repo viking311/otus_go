@@ -11,6 +11,9 @@ service EventService{
   rpc GetEventById(GetEventByIdRequest) returns (Event);
   rpc GetEventsByUserId(GetEventsByUserIdRequest) returns (EventList){}
   rpc GetEventsByUserIdAndDates(GetEventsByUserIdAndDatesRequest) returns (EventList) {}
+
+  rpc SaveEvent(SaveEventRequest) returns (Event){}
+  rpc DeleteEvent(DeleteEventRequest) returns (DeleteEventResponse) {}
 }
 
 message Event {
@@ -43,3 +46,14 @@ message GetEventsByUserIdAndDatesRequest {
   google.protobuf.Timestamp end_time = 3;
 }
 
+message SaveEventRequest {
+  Event event  = 1;
+}
+
+message DeleteEventRequest {
+  string id =1;
+}
+
+message DeleteEventResponse {
+  string status = 1;
+}

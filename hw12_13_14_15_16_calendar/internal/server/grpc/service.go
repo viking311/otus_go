@@ -2,13 +2,16 @@ package internalgrpc
 
 import (
 	"context"
+	"errors"
 	"time"
+
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/app"
 
 	"google.golang.org/grpc/codes"
 
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage"
 
-	status "google.golang.org/grpc/status"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	pb "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/api"
@@ -71,6 +74,32 @@ func (s *Service) GetEventsByUserIdAndDates(_ context.Context, request *pb.GetEv
 	}
 
 	return &response, nil
+}
+
+func (s *Service) SaveEvent(_ context.Context, request *pb.SaveEventRequest) (*pb.Event, error) {
+	rawEvent, err := s.protoEventToStorageEvent(request.GetEvent())
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	savedEvent, err := s.app.SaveEvent(*rawEvent)
+	if err != nil {
+		var verr *app.FieldValidationError
+		if errors.As(err, &verr) {
+			return nil, status.Error(codes.InvalidArgument, verr.Error())
+		}
+		return nil, status.Error(codes.Internal, "Unexpected error")
+	}
+
+	return s.storageEventToProtoEvent(*savedEvent), nil
+}
+
+func (s *Service) DeleteEvent(_ context.Context, request *pb.DeleteEventRequest) (*pb.DeleteEventResponse, error) {
+	s.app.DeleteEvent(request.GetId())
+
+	return &pb.DeleteEventResponse{
+		Status: "ok",
+	}, nil
 }
 
 func (s *Service) protoEventToStorageEvent(pbEvent *pb.Event) (*storage.Event, error) {
