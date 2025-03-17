@@ -41,6 +41,6 @@ func NewServer(logger app.Logger, app server.Application, httpCfg server.HTTPSer
 	return &Server{
 		logger:     logger,
 		httpServer: internalhttp.NewServer(logger, app, httpCfg.BindAddress, httpCfg.BindPort, httpCfg.Timeout),
-		grpcServer: internalgrpc.NewServer(app, grpcCfg.BindAddress, grpcCfg.BindPort),
+		grpcServer: internalgrpc.NewServer(app, logger, grpcCfg.BindAddress, grpcCfg.BindPort),
 	}
 }
