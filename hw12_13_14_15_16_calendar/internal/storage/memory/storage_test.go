@@ -113,9 +113,10 @@ func TestStorage_GetById(t *testing.T) {
 
 		_, _ = memoryStorage.Save(event)
 
-		_, ok := memoryStorage.GetByID("unknown ID")
+		_, err := memoryStorage.GetByID("unknown ID")
 
-		require.Equal(t, false, ok)
+		require.Error(t, err)
+		require.Equal(t, "event not found", err.Error())
 	})
 
 	t.Run("get by id success", func(t *testing.T) {
@@ -132,10 +133,10 @@ func TestStorage_GetById(t *testing.T) {
 
 		event, _ = memoryStorage.Save(event)
 
-		res, ok := memoryStorage.GetByID(event.ID)
+		res, err := memoryStorage.GetByID(event.ID)
 
-		require.Equal(t, true, ok)
-		require.Equal(t, event, res)
+		require.NoError(t, err)
+		require.Equal(t, event, *res)
 	})
 }
 
