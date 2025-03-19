@@ -60,12 +60,62 @@ func (s *Storage) Save(event storage.Event) (storage.Event, error) {
 }
 
 func (s *Storage) Delete(event storage.Event) error {
-	_, err := s.db.ExecContext(s.ctx, "DELETE FROM events where id=$1", event.ID)
+	_, err := s.db.ExecContext(s.ctx, "DELETE FROM events where id::text=$1", event.ID)
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (s *Storage) GetByID(id string) (*storage.Event, error) {
+	row := s.db.QueryRowContext(
+		s.ctx,
+		"SELECT id,title,description,event_time,duration,remind_time,user_id FROM events WHERE id::text=$1",
+		id,
+	)
+
+	var desc, duration sql.NullString
+	var rTime sql.NullInt64
+	var title, eventID string
+	var eventTime time.Time
+	var userID int64
+
+	err := row.Scan(
+		&eventID,
+		&title,
+		&desc,
+		&eventTime,
+		&duration,
+		&rTime,
+		&userID,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	event := storage.Event{
+		ID:       id,
+		Title:    title,
+		DateTime: eventTime,
+		UserID:   userID,
+	}
+
+	if desc.Valid {
+		event.Description = desc.String
+	}
+
+	if duration.Valid {
+		if d, err := time.ParseDuration(duration.String); err == nil {
+			event.Duration = d
+		}
+	}
+
+	if rTime.Valid {
+		event.RemindTime = rTime.Int64
+	}
+
+	return &event, nil
 }
 
 func (s *Storage) GetByUserID(userID int64) (storage.EventList, error) {
@@ -148,7 +198,7 @@ func (s *Storage) GetByUserIDAndPeriod(userID int64, dateFrom, dateTo time.Time)
     				remind_time,
     				user_id 
 				FROM events 
-				WHERE user_id=$1 and event_date between $2 AND $3`,
+				WHERE user_id=$1 and event_time between $2 AND $3`,
 		userID,
 		dateFrom.Format(time.RFC3339),
 		dateTo.Format(time.RFC3339))
@@ -199,6 +249,8 @@ func (s *Storage) GetByUserIDAndPeriod(userID int64, dateFrom, dateTo time.Time)
 		if rTime.Valid {
 			event.RemindTime = rTime.Int64
 		}
+
+		eventList = append(eventList, event)
 	}
 
 	err = rows.Err()
@@ -270,6 +322,7 @@ func (s *Storage) GetAll() (storage.EventList, error) {
 		if rTime.Valid {
 			event.RemindTime = rTime.Int64
 		}
+		eventList = append(eventList, event)
 	}
 
 	err = rows.Err()

@@ -2,6 +2,7 @@ package memorystorage
 
 import (
 	"context"
+	"errors"
 	"sync"
 	"time"
 
@@ -36,15 +37,15 @@ func (s *Storage) Delete(event storage.Event) error {
 	return nil
 }
 
-func (s *Storage) GetByID(id string) (storage.Event, bool) {
+func (s *Storage) GetByID(id string) (*storage.Event, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
-	if _, ok := s.events[id]; ok {
-		return s.events[id], true
+	if ev, ok := s.events[id]; ok {
+		return &ev, nil
 	}
 
-	return storage.Event{}, false
+	return nil, errors.New("event not found")
 }
 
 func (s *Storage) GetByUserID(userID int64) (storage.EventList, error) {

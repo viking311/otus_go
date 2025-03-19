@@ -5,14 +5,13 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/app"
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/logger"
-	internalhttp "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server/http"
+	unionserver "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server/union_server"
 	memorystorage "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage/memory"
 	sqlstorage "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage/sql"
 )
@@ -34,15 +33,22 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer func() {
+		errClose := logg.Close()
+		if errClose != nil {
+			log.Fatal(errClose)
+		}
+	}()
 
 	repository, err := getStorage(config.StorageType, config.DB)
 	if err != nil {
-		log.Fatal(err)
+		logg.Error(err.Error())
+		return
 	}
 
 	calendar := app.New(logg, repository)
 
-	server := internalhttp.NewServer(logg, calendar, config.HTTPServer)
+	srv := unionserver.NewServer(logg, calendar, config.HTTPServer, config.GRPCConfig)
 
 	ctx, cancel := signal.NotifyContext(context.Background(),
 		syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
@@ -54,17 +60,17 @@ func main() {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*3)
 		defer cancel()
 
-		if err := server.Stop(ctx); err != nil {
+		if err := srv.Stop(ctx); err != nil {
 			logg.Error("failed to stop http server: " + err.Error())
 		}
 	}()
 
 	logg.Info("calendar is running...")
 
-	if err := server.Start(ctx); err != nil {
+	if err := srv.Start(ctx); err != nil {
 		logg.Error("failed to start http server: " + err.Error())
 		cancel()
-		os.Exit(1) //nolint:gocritic
+		return
 	}
 }
 

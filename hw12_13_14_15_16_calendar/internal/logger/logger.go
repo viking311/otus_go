@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"io"
 	"os"
 
 	"github.com/sirupsen/logrus"
@@ -13,6 +14,7 @@ type Config struct {
 
 type Logger struct {
 	logger *logrus.Logger
+	out    io.Closer
 }
 
 func New(cfg Config) (*Logger, error) {
@@ -39,6 +41,7 @@ func New(cfg Config) (*Logger, error) {
 
 	return &Logger{
 			logger: logger,
+			out:    file,
 		},
 		nil
 }
@@ -69,4 +72,8 @@ func (l Logger) Fatal(msg string) {
 
 func (l Logger) Panic(msg string) {
 	l.logger.Panic(msg)
+}
+
+func (l Logger) Close() error {
+	return l.out.Close()
 }

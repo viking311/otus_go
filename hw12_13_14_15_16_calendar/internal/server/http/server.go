@@ -4,28 +4,26 @@ import (
 	"context"
 	"net"
 	"net/http"
+	"time"
 
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/app"
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server"
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server/http/handler"
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server/http/middleware"
 )
 
 type Server struct {
 	server *http.Server
 	logger app.Logger
-	app    Application
+	app    server.Application
 }
 
-type Application interface {
-	Start(ctx context.Context) error
-	Stop(ctx context.Context) error
-}
-
-func NewServer(logger app.Logger, app Application, cfg HTTPServerConfig) *Server {
+func NewServer(logger app.Logger, app server.Application, bindAddress, bindPort string, timeout time.Duration) *Server {
 	return &Server{
 		server: &http.Server{
-			Addr:         net.JoinHostPort(cfg.BindAddress, cfg.BindPort),
-			ReadTimeout:  cfg.Timeout,
-			WriteTimeout: cfg.Timeout,
+			Addr:         net.JoinHostPort(bindAddress, bindPort),
+			ReadTimeout:  timeout,
+			WriteTimeout: timeout,
 		},
 		logger: logger,
 		app:    app,
@@ -38,10 +36,29 @@ func (s *Server) Start(ctx context.Context) error {
 		return err
 	}
 
-	middleware := NewLoggingMiddleware(s.logger)
+	LoggerMiddleware := middleware.NewLoggingMiddleware(s.logger)
 
 	mux := http.NewServeMux()
-	mux.Handle("/", middleware.loggingMiddleware(&handler.Stub{}))
+	eventByIDHandler := handler.NewGetEventByID(s.app, s.logger)
+	mux.Handle("GET /events/{id}", LoggerMiddleware.LoggingMiddleware(eventByIDHandler))
+
+	deleteEventHandler := handler.NewDeleteEventHandler(s.app, s.logger)
+	mux.Handle("DELETE /events/{id}", LoggerMiddleware.LoggingMiddleware(deleteEventHandler))
+
+	eventsHandler := handler.NewGetEventsHandler(s.app, s.logger)
+	mux.Handle("GET /events", LoggerMiddleware.LoggingMiddleware(eventsHandler))
+
+	saveEventHandler := handler.NewSaveEventHandler(s.app, s.logger)
+	mux.Handle("POST /events", LoggerMiddleware.LoggingMiddleware(saveEventHandler))
+
+	getEventsByUserHandler := handler.NewGetEventsByUserHandler(s.app, s.logger)
+	mux.Handle("GET /users/{userId}/events", LoggerMiddleware.LoggingMiddleware(getEventsByUserHandler))
+
+	getEventsByUserAndDatesHandker := handler.NewGetEventsByUserAndDatesHandler(s.app, s.logger)
+	mux.Handle("GET /users/{userId}/events/{dateFrom}/{dateTo}",
+		LoggerMiddleware.LoggingMiddleware(getEventsByUserAndDatesHandker))
+
+	mux.Handle("/", LoggerMiddleware.LoggingMiddleware(&handler.Stub{}))
 
 	s.server.Handler = mux
 

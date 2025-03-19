@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/logger"
-	internalhttp "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server/http"
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/server"
 	sqlstorage "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage/sql"
 	"gopkg.in/yaml.v3"
 )
@@ -14,10 +14,11 @@ import (
 // Организация конфига в main принуждает нас сужать API компонентов, использовать
 // при их конструировании только необходимые параметры, а также уменьшает вероятность циклической зависимости.
 type Config struct {
-	StorageType string                        `yaml:"storageType"`
-	Logger      logger.Config                 `yaml:"logger"`
-	DB          sqlstorage.DBConfig           `yaml:"db"`
-	HTTPServer  internalhttp.HTTPServerConfig `yaml:"httpServer"`
+	StorageType string                  `yaml:"storageType"`
+	Logger      logger.Config           `yaml:"logger"`
+	DB          sqlstorage.DBConfig     `yaml:"db"`
+	HTTPServer  server.HTTPServerConfig `yaml:"httpServer"`
+	GRPCConfig  server.GRPCServerConfig `yaml:"grpcServer"`
 }
 
 var configFile string
