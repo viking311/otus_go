@@ -1,0 +1,10 @@
+storageType: "sql" # доступны memory, sql
+logger:
+  level: "INFO"
+  fileName: "/dev/stdout"
+db:
+  host: "localhost"
+  port: 5432
+  user: "postgres"
+  password: "mysecretpassword"
+  dbName: "postgres"
