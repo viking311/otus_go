@@ -9,14 +9,12 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/app"
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/logger"
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/queue"
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/scheduler"
-
-	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/app"
 	memorystorage "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage/memory"
 	sqlstorage "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage/sql"
-
-	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/logger"
 )
 
 func main() {

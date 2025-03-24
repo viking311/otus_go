@@ -8,11 +8,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/sender"
-
-	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/queue"
-
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/logger"
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/queue"
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/sender"
 )
 
 func main() {

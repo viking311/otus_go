@@ -5,17 +5,15 @@ import (
 	"os"
 	"time"
 
-	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/queue"
-
-	sqlstorage "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage/sql"
-
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/logger"
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/queue"
+	sqlstorage "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage/sql"
 	"gopkg.in/yaml.v3"
 )
 
 type Config struct {
 	StorageType string              `yaml:"storageType"`
-	Period      time.Duration       `yaml:"period""`
+	Period      time.Duration       `yaml:"period"`
 	Logger      logger.Config       `yaml:"logger"`
 	DB          sqlstorage.DBConfig `yaml:"db"`
 	Queue       queue.Config        `yaml:"queueServer"`

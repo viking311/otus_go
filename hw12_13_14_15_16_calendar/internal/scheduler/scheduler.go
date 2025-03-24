@@ -5,10 +5,9 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage"
-
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/app"
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/queue"
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage"
 )
 
 type Scheduler struct {
@@ -35,7 +34,6 @@ func (s *Scheduler) Run() {
 
 func (s *Scheduler) getEvents() []storage.Event {
 	events, err := s.storage.GetForReminder()
-
 	if err != nil {
 		s.logger.Error(err.Error())
 		return make([]storage.Event, 0)
