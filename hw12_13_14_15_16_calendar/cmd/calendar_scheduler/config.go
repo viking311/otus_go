@@ -3,6 +3,9 @@ package main
 import (
 	"flag"
 	"os"
+	"time"
+
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/queue"
 
 	sqlstorage "github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/storage/sql"
 
@@ -12,8 +15,10 @@ import (
 
 type Config struct {
 	StorageType string              `yaml:"storageType"`
+	Period      time.Duration       `yaml:"period""`
 	Logger      logger.Config       `yaml:"logger"`
 	DB          sqlstorage.DBConfig `yaml:"db"`
+	Queue       queue.Config        `yaml:"queueServer"`
 }
 
 var configFile string

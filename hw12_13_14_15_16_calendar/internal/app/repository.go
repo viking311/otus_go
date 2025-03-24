@@ -14,6 +14,7 @@ type Repository interface {
 	GetByUserID(userID int64) (storage.EventList, error)
 	GetByUserIDAndPeriod(userID int64, dateFrom, dateTo time.Time) (storage.EventList, error)
 	GetAll() (storage.EventList, error)
+	GetForReminder() ([]storage.Event, error)
 	Connect(ctx context.Context) error
 	Close(ctx context.Context) error
 }

@@ -88,6 +88,18 @@ func (s *Storage) GetAll() (storage.EventList, error) {
 	return eventList, nil
 }
 
+func (s *Storage) GetForReminder() ([]storage.Event, error) {
+	eventList := make([]storage.Event, 0)
+
+	for _, v := range s.events {
+		if v.DateTime.Unix() > time.Now().Unix() && (v.DateTime.Unix()-time.Now().Unix()) <= v.RemindTime {
+			eventList = append(eventList, v)
+		}
+	}
+
+	return eventList, nil
+}
+
 func (s *Storage) Connect(_ context.Context) error {
 	return nil
 }

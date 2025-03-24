@@ -4,6 +4,8 @@ import (
 	"flag"
 	"os"
 
+	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/queue"
+
 	"github.com/viking311/otus_go/hw12_13_14_15_16_calendar/internal/logger"
 
 	"gopkg.in/yaml.v3"
@@ -11,6 +13,7 @@ import (
 
 type Config struct {
 	Logger logger.Config `yaml:"logger"`
+	Queue  queue.Config  `yaml:"queueServer"`
 }
 
 var configFile string

@@ -1,4 +1,5 @@
 storageType: "sql" # доступны memory, sql
+period: "5s"
 logger:
   level: "INFO"
   fileName: "/dev/stdout"
@@ -8,3 +9,10 @@ db:
   user: "postgres"
   password: "mysecretpassword"
   dbName: "postgres"
+queueServer:
+  host: "localhost"
+  port: "5672"
+  user: "guest"
+  password: "guest"
+  queueName: "events"
+  "timeout": "5s"
