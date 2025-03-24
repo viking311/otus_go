@@ -20,7 +20,6 @@ type Scheduler struct {
 }
 
 func (s *Scheduler) Run() {
-	s.logger.Info("scheduler is starting")
 	ticker := time.NewTicker(s.period)
 	for {
 		select {

@@ -4,7 +4,7 @@ logger:
 queueServer:
   host: "localhost"
   port: "5672"
-  login: "guest"
+  user: "guest"
   password: "guest"
   queueName: "events"
   "timeout": "5s"
